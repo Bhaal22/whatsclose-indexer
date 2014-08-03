@@ -1,4 +1,4 @@
-var Promise = require('promise');
+var Promise = require('es6-promise').Promise;
 var http = require('http');
 var env = require('jsdom').env;
 
@@ -45,12 +45,16 @@ Band.prototype.downloadRawDates = function () {
       });
       
       res.on('end', function () {
+        console.log('end %s', band.toString ());
         band.getRawConcertInformation (data).then (function (response) {
-          resolve(band.concerts);
+         resolve(band.concerts);
         });
-      }).on('error', function() {
-        reject(Error("error"));
+      }).on('error', function(e) {
+        console.log('error');
+        reject([]);
       });
+    }).on ('error', function (e) {
+      resolve ([]);
     });
   });
 }

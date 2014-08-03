@@ -1,20 +1,25 @@
-var Promise = require('Promise');
+var Promise = require('es6-promise').Promise;
 
 var volbeatModule = require('./bands/volbeat.js');
 var tagadaModule = require('./bands/tagada_jones.js');
+var fakeBandModule = require("./test/fake_band.js");
 
 var indexerModule = require ('./bands/Indexer.js');
 
 var band1 = new volbeatModule.Band();
 var band2 = new tagadaModule.Band();
+var fake = new fakeBandModule.Band ();
 
 var indexer = new indexerModule.I ('concerts');
+
+
+
 
 console.log('Starting bands indexer');
 console.log(band1.toString());
 console.log(band2.toString());
 
-var bands = [ band1, band2 ];
+var bands = [ band1, band2, fake ];
 
 var sequence = Promise.resolve ();
 
