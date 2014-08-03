@@ -1,6 +1,5 @@
 var Promise = require('es6-promise').Promise;
 var http = require('http');
-var geocoder = require('geocoder');
 var env = require('jsdom').env;
 
 function Concert(date, location) {
