@@ -5,6 +5,8 @@ var tagadaModule = require('./bands/tagada_jones.js');
 var fakeBandModule = require("./test/fake_band.js");
 
 var indexerModule = require ('./bands/Indexer.js');
+var geocoder = require('geocoder');
+var sleep = require('sleep');
 
 var band1 = new volbeatModule.Band();
 var band2 = new tagadaModule.Band();
@@ -25,6 +27,7 @@ var sequence = Promise.resolve ();
 
 var promises = [];
 
+
 bands.forEach (function (band) {
   promises.push (band.downloadRawDates ());
 });
@@ -37,6 +40,25 @@ Promise.all(promises).then (function (promiseSequence) {
   }, 0);
 
   console.log (nb);
+
+  promiseSequence.forEach (function (promise) {
+    console.log(promise.length);
+    promise.forEach (function(concert) {
+      geocoder.geocode(concert.location, function ( err, data ) {
+        console.log ('sleeping');
+        sleep.usleep (500000);
+        console.log ("%s : %s", concert.location, data.results.length);
+        
+        if (data.status === 'OK') {
+          console.log (data.results[0].geometry); 
+        }
+        else {
+          console.log (data);
+        }
+      });
+    });
+  });
+
 }); 
 
 // bands.reduce (function (promiseSequence, band) {

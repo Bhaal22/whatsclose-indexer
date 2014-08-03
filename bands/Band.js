@@ -1,6 +1,13 @@
 var Promise = require('es6-promise').Promise;
 var http = require('http');
+var geocoder = require('geocoder');
 var env = require('jsdom').env;
+
+function Concert(date, location) {
+  this.date = date;
+  this.location = location;
+  this.geometry = {};
+}
 
 function Band() {
   this.url = '';
@@ -26,6 +33,8 @@ Band.prototype.getRawConcertInformation = function (data) {
       var $ = require('jquery')(window);
       
       band.extract_concert_information ($);
+      
+      
       resolve(band.concerts);
     });
   });
@@ -61,5 +70,6 @@ Band.prototype.downloadRawDates = function () {
 
 
 module.exports = {
-  Band: Band
+  Band: Band,
+  Concert: Concert
 };
