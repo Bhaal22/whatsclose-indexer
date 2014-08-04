@@ -51,8 +51,11 @@ Promise.all(promises).then (function (promiseSequence) {
         
         if (data.status === 'OK') {
           console.log (data.results[0].geometry); 
+          indexer.publish (concert);
         }
         else {
+          var notIndexedConcertIndex = 'concerts_in_error';
+          indexer.publish (concert, notIndexedConcertIndex);
           console.log (data);
         }
       });
