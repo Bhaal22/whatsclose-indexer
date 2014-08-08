@@ -24,7 +24,7 @@ FakeVolbeat.prototype.extract_concert_information = function ($) {
     var date = $('td.dates_date', this).text ();
     var location = $('td.dates_info2', this).text ();
 
-    band.concerts.push (new Concert (new Date (date), location));
+    band.concerts.push (new Concert (band.name, new Date (date), location));
   });
 }
 

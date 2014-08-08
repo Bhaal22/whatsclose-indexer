@@ -15,13 +15,12 @@ var fake = new fakeBandModule.Band ();
 var indexer = new indexerModule.I ('concerts');
 
 
-
-
 console.log('Starting bands indexer');
 console.log(band1.toString());
 console.log(band2.toString());
 
-var bands = [ band1, band2, fake ];
+//var bands = [ band1, band2, fake ];
+var bands = [ band1, band2];
 
 var sequence = Promise.resolve ();
 
@@ -44,21 +43,27 @@ Promise.all(promises).then (function (promiseSequence) {
   promiseSequence.forEach (function (promise) {
     console.log(promise.length);
     promise.forEach (function(concert) {
-      geocoder.geocode(concert.location, function ( err, data ) {
-        console.log ('sleeping');
-        sleep.usleep (500000);
-        console.log ("%s : %s", concert.location, data.results.length);
-        
-        if (data.status === 'OK') {
-          console.log (data.results[0].geometry); 
-          indexer.publish (concert);
-        }
-        else {
-          var notIndexedConcertIndex = 'concerts_in_error';
-          indexer.publish (concert, notIndexedConcertIndex);
-          console.log (data);
-        }
-      });
+//      geocoder.geocode(concert.location, function ( err, data ) {
+//        console.log ('sleeping');
+//        sleep.usleep (500000);
+//        console.log ("%s : %s", concert.location, data.results.length);
+//        
+//        if (data.status === 'OK') {
+//          console.log (data.results[0].geometry); 
+//          indexer.publish (concert);
+//        }
+//        else {
+//          var notIndexedConcertIndex = 'concerts_in_error';
+//          indexer.publish (concert, notIndexedConcertIndex);
+//          console.log (data);
+//        }
+//      });
+      
+    	console.log ('sleeping');
+    	console.log(concert.bandName);
+    	console.log(concert.location);
+    	indexer.publish(concert);
+      
     });
   });
 

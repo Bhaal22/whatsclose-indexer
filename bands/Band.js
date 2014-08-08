@@ -2,10 +2,11 @@ var Promise = require('es6-promise').Promise;
 var http = require('http');
 var env = require('jsdom').env;
 
-function Concert(date, location) {
-  this.date = date;
-  this.location = location;
-  this.geometry = {};
+function Concert(bandName, date, location) {
+	this.bandName = bandName; 
+	this.date = date;
+	this.location = location;
+	this.geometry = {};
 }
 
 function Band() {

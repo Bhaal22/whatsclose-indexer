@@ -22,7 +22,7 @@ TagadaJones.prototype.extract_concert_information = function ($) {
     var location = fullLocation.split ('\n')[2].trim (); 
     var dateElements = date.split ("/");
 
-    currentBand.concerts.push (new band.Concert (new Date (dateElements[2], dateElements[1], dateElements[0]),
+    currentBand.concerts.push (new band.Concert (currentBand.name, new Date (dateElements[2], dateElements[1], dateElements[0]),
                                                  location));
   });
 }

@@ -19,7 +19,7 @@ Volbeat.prototype.extract_concert_information = function ($) {
     var date = $('td.dates_date', this).text ();
     var location = $('td.dates_info2', this).text ();
 
-    currentBand.concerts.push (new band.Concert (new Date (date), location));
+    currentBand.concerts.push (new band.Concert (currentBand.name, new Date (date), location));
   });
 }
 
