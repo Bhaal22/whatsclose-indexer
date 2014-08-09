@@ -1,0 +1,15 @@
+{
+  "name": "whatsclose-indexer",
+  "version": "0.0.1",
+  "private": true,
+
+  "dependencies": {
+    "elasticsearch": "^2.3.0",
+    "es6-promise": "~1.0.0",
+    "geocoder": "^0.2.0",
+    "jquery": "~2.1.1",
+    "jsdom": "~0.11.1",
+    "sleep": "#~1.1.8",
+    "winston": "~0.7.3"
+  }
+}

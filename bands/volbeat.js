@@ -5,7 +5,6 @@ function Volbeat() {
   this.datesPath = '/3/dates/';
   this.name = 'Volbeat';
   this.style = ['Metal'];
-  this.concerts = [];
 }
 
 Volbeat.prototype = new band.Band();

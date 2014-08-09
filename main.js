@@ -5,69 +5,92 @@ var tagadaModule = require('./bands/tagada_jones.js');
 var fakeBandModule = require("./test/fake_band.js");
 
 var indexerModule = require ('./bands/Indexer.js');
-var geocoder = require('geocoder');
-var sleep = require('sleep');
 
 var band1 = new volbeatModule.Band();
 var band2 = new tagadaModule.Band();
 var fake = new fakeBandModule.Band ();
 
-var indexer = new indexerModule.I ('concerts');
+var indexer = new indexerModule.I ();
 
+var geocodesvc = require ('./GeoCodeService').geocodesvc;
 
 console.log('Starting bands indexer');
 console.log(band1.toString());
 console.log(band2.toString());
 
-//var bands = [ band1, band2, fake ];
 var bands = [ band1, band2];
-
-var sequence = Promise.resolve ();
 
 var promises = [];
 
 
+// bands.forEach (function (band) {
+//   promises.push (band.downloadRawDates ());
+// });
+
+// Promise.all (promises).then (function (bandPromises) {
+//   console.log (bandPromises.length);
+
+//   Promise.all (bandPromises).then (function (concertPromises) {
+//     console.log (concertPromises.length);
+
+//     Promise.all (concertPromises).then (function (concertPromise) {
+//       console.log (concertPromise.length);
+//       return geocodesvc.resolve (concertPromise);
+//     }).then (function (geometry) { 
+//       console.log (geometry);
+//     });
+//   });
+// });
+var p = [];
 bands.forEach (function (band) {
-  promises.push (band.downloadRawDates ());
-});
+  band.downloadRawDates().then (function (concerts) {
 
-Promise.all(promises).then (function (promiseSequence) {
-  console.log ("then %s", promiseSequence.length);
-
-  var nb = promiseSequence.reduce (function (prev, current) {
-    return prev + current.length;
-  }, 0);
-
-  console.log (nb);
-
-  promiseSequence.forEach (function (promise) {
-    console.log(promise.length);
-    promise.forEach (function(concert) {
-//      geocoder.geocode(concert.location, function ( err, data ) {
-//        console.log ('sleeping');
-//        sleep.usleep (500000);
-//        console.log ("%s : %s", concert.location, data.results.length);
-//        
-//        if (data.status === 'OK') {
-//          console.log (data.results[0].geometry); 
-//          indexer.publish (concert);
-//        }
-//        else {
-//          var notIndexedConcertIndex = 'concerts_in_error';
-//          indexer.publish (concert, notIndexedConcertIndex);
-//          console.log (data);
-//        }
-//      });
-      
-    	console.log ('sleeping');
-    	console.log(concert.bandName);
-    	console.log(concert.location);
-    	indexer.publish(concert);
-      
+    concerts.forEach (function (concert) {
+      geocodesvc.resolve(concert.location).then (function (geo) {
+        console.log(geo);
+      });
     });
   });
+});
 
-}); 
+// Promise.all (promises).then (function (bandPromises) {
+//   console.log (bandPromises.length);
+//   return bandPromises;
+  
+// }).then (function (
+
+// Promise.all(promises).then (function (promiseSequence) {
+//   console.log ("then %s", promiseSequence.length);
+
+//   var nb = promiseSequence.reduce (function (prev, current) {
+//     return prev + current.length;
+//   }, 0);
+
+//   console.log (nb);
+
+//   promiseSequence.forEach (function (promise) {
+//     console.log(promise.length);
+
+//     var geocodepromises = [];
+
+//     promise.forEach (function(concert) {
+//       var location = concert.location;
+//       geocodepromises.push (geocodesvc.resolve (location));
+
+//       Promise.all (geocodepromises). then (function (geocodesPromiseSequence) {
+//         geocodesPromiseSequence.forEach (function (geocodePromise) {
+//           console.log (geocodePromise);
+//         });
+//       });
+//     });
+      
+// //    	console.log ('sleeping');
+// //    	console.log(concert.bandName);
+// //    	console.log(concert.location);
+//     	//indexer.publish(concert);
+      
+//   });
+// }); 
 
 // bands.reduce (function (promiseSequence, band) {
 //   return promiseSequence.then (function () {

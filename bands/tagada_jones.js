@@ -5,7 +5,6 @@ function TagadaJones() {
   this.datesPath = '/new/#/Dates/';
   this.name = 'Tagada Jones';
   this.style = ['Punk', 'HardCore'];
-  this.concerts = [];
 }
 
 TagadaJones.prototype = new band.Band();

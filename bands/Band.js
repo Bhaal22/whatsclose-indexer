@@ -14,6 +14,7 @@ function Band() {
   this.datesPath = '';
   this.name = '';
   this.style = [];
+  this.concerts = [];
 
   this.last_indexed = new Date ();
 }
@@ -59,7 +60,6 @@ Band.prototype.downloadRawDates = function () {
          resolve(band.concerts);
         });
       }).on('error', function(e) {
-        console.log('error');
         reject([]);
       });
     }).on ('error', function (e) {
