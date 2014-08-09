@@ -2,7 +2,7 @@ var winston = require('winston');
 var es = require('elasticsearch');
 
 function Indexer () {
-  this.index = '';
+  this.index = 'whatsclose';
   this.type = '';
   this.es_client = new es.Client ({
     host: 'localhost:9200',
@@ -10,13 +10,13 @@ function Indexer () {
   });
 }
 
-Indexer.prototype.exists = function () {
+Indexer.prototype.exists = function (data) {
   throw 'Not implemented';
 }
 
 Indexer.prototype.publish = function (data) {
 
-  if (!exists (data)) {
+  if (!this.exists (data)) {
     this.es_client.create({
       index: this.index,
       type: this.type,

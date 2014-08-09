@@ -1,0 +1,6 @@
+"concert" : {
+  "band_name" : { "type" : "string" },
+  "date" : { "type" : "date" },
+  "location" : { "type" : "string" },
+  "geo" : { "type" : "geo_point" }
+}

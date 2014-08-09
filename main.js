@@ -4,7 +4,7 @@ var volbeatModule = require('./bands/volbeat.js');
 var tagadaModule = require('./bands/tagada_jones.js');
 var fakeBandModule = require("./test/fake_band.js");
 
-var indexerModule = require ('./bands/Indexer.js');
+var indexerModule = require ('./indexer.es/Indexer.js');
 
 var band1 = new volbeatModule.Band();
 var band2 = new tagadaModule.Band();
@@ -12,42 +12,29 @@ var fake = new fakeBandModule.Band ();
 
 var indexer = new indexerModule.I ();
 
-var geocodesvc = require ('./GeoCodeService').geocodesvc;
+var geocodesvc = require ('./geocode/GeoCodeService').geocodesvc;
 
 console.log('Starting bands indexer');
 console.log(band1.toString());
 console.log(band2.toString());
 
-var bands = [ band1, band2];
+var bands = [ band1 ];
 
-var promises = [];
-
-
-// bands.forEach (function (band) {
-//   promises.push (band.downloadRawDates ());
-// });
-
-// Promise.all (promises).then (function (bandPromises) {
-//   console.log (bandPromises.length);
-
-//   Promise.all (bandPromises).then (function (concertPromises) {
-//     console.log (concertPromises.length);
-
-//     Promise.all (concertPromises).then (function (concertPromise) {
-//       console.log (concertPromise.length);
-//       return geocodesvc.resolve (concertPromise);
-//     }).then (function (geometry) { 
-//       console.log (geometry);
-//     });
-//   });
-// });
-var p = [];
 bands.forEach (function (band) {
   band.downloadRawDates().then (function (concerts) {
 
     concerts.forEach (function (concert) {
       geocodesvc.resolve(concert.location).then (function (geo) {
-        console.log(geo);
+        return new Promise (function(resolve, reject) {
+          concert.geometry = geo;
+          resolve(concert);
+        });
+      }).then(function (concert) { 
+        try {
+          indexer.publish (concert);
+        } catch (e) {
+          console.log (e);
+        }
       });
     });
   });
