@@ -18,7 +18,7 @@ Band.prototype = {
 
 	addConcertEvent: function (date, location) {
 		var event = new Concert();
-		event.date = new Date(date);
+		event.date = date;
   	event.location = location;
 		
 		// bandname to remove ?

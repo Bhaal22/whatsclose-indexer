@@ -4,12 +4,12 @@ var winston = require('winston');
 
 
 var newCrawlModule = new CrawlerModule();
-newCrawlModule.fullUrl = 'http://www.volbeat.dk/3/dates/';
-newCrawlModule.fullUrl = 'http://www.volbeat.dk/3/dates/';
+newCrawlModule.fullUrl = 'http://www.tagadajones.com/new/#/Dates/';
 newCrawlModule.band = new Band();
-newCrawlModule.band.name = 'Volbeat';
-newCrawlModule.band.website = 'http://www.volbeat.dk/';
-newCrawlModule.band.style.push('Metal');
+newCrawlModule.band.name = 'Tagada Jones';
+newCrawlModule.band.website = 'http://www.tagadajones.com';
+newCrawlModule.band.style.push('Punk');
+newCrawlModule.band.style.push('HardCore');
 
 // Override the method that assess the web page structure
 newCrawlModule.testDataAcess = function() {
@@ -19,17 +19,21 @@ newCrawlModule.testDataAcess = function() {
 
 // Override the method that retrieve the events data
 newCrawlModule.processData = function(window) {
-  winston.info('volbeat processDate');
+
+ winston.info('volbeat processDate');
 
   var $ = require('jquery')(window);
   var dates_table = $('table.dates_list');
-  
+	var rows = $ ('#scroll-content-dates > ul > li');
+	
   var results = [];
-  var rows = $ ('.dates_list > tr');
   rows.each (function (index) {
-    var date = $('td.dates_date', this).text ();
-    var location = $('td.dates_info2', this).text ();
-    results.push({date: date, location: location});
+    var date = $('span.DateDate', this).text ();
+		var fullLocation = $(this).text ();
+		var location = fullLocation.split ('\n')[2].trim ();
+		var dateElements = date.split ("/");
+		
+		results.push({date: new Date (dateElements[2], dateElements[1], dateElements[0]), location: location});
 
   });
 
@@ -40,3 +44,7 @@ newCrawlModule.processData = function(window) {
 module.exports = {
   crawlModule: newCrawlModule
 };
+
+
+
+
