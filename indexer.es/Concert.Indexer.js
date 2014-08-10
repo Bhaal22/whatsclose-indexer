@@ -1,40 +1,26 @@
+var root_indexer = require("./Indexer").I
 var winston = require('winston');
 var es = require('elasticsearch');
 
-function Concert.Indexer () {
-  this.index = 'whatsclose';
-  this.type = 'concert';
-  this.es_client = new es.Client ({
-    host: 'localhost:9200',
-    port: '9200'
-  });
+function ConcertIndexer () {
+    this.type = 'concert';
 }
 
-Indexer.prototype.exists = function (data) {
-  throw 'Not implemented';
-}
-
-Indexer.prototype.publish = function (data) {
-
-  if (!this.exists (data)) {
-    this.es_client.create({
-      index: this.index,
-      type: this.type,
-      body: data
-    }, function (error, response) {
-      if (error) {
-        winston.error("NOT COOL! [" + error + "]");
-      } else {
-        if (response) {
-          winston.log(response);
-        } else {
-          winston.log("vas savoir ^^");
+ConcertIndexer.prototype = new root_indexer();
+ConcertIndexer.prototype.exists = function (data) {
+    return this.es_client.search ({
+        index: this.index,
+        body: {
+            query: {
+                match: {
+                    band_name: data.band_name,
+                    date: data.date
+                    }
+                }
         }
-      }
     });
-  }
 }
 
 module.exports = {
-  I: Indexer
+  indexer: ConcertIndexer
 };

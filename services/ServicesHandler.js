@@ -1,5 +1,6 @@
 var winston = require('winston');
 var fs = require('fs');
+var path = require('path');
 
 // attributes
 var ServicesHandler = function () {
@@ -8,22 +9,29 @@ var ServicesHandler = function () {
 
 // methods
 ServicesHandler.prototype = {
-
+  
+  
   init: function() {
-
+    
   	// retrieve the crawlers js files
   	var servicesDir = fs.readdirSync('services');
-  	
   	for (var i = 0, ii = servicesDir.length; i < ii; i++) {
-  	  
-  	  winston.info('Crawler file found : ' + servicesDir[i]);
-  	  
-  	  // Load the js files as node modules
-  	  var module = require('./services/' + servicesDir[i].replace(/.js$/, ""));
+  	  if (servicesDir[i] != path.basename (__filename)) {
+  	    winston.info('service file found : ' + servicesDir[i]);
+  	    
+  	    // Load the js files as node modules
+  	    var module = require('./' + servicesDir[i].replace(/.js$/, ""));
+        
+        try {
+          module.init ();
+  	      this.services.push(module);
+        } catch (e) {
+          console.log (e);
 
-  	  servicesDir.push(module);
+        }
+      }
   	};
   }
 }
 
-module.exports = ServicesHandler;
+module.exports = new ServicesHandler ();

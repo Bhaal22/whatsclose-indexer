@@ -16,7 +16,7 @@ Indexer.prototype.exists = function (data) {
 
 Indexer.prototype.publish = function (data) {
 
-  if (!this.exists (data)) {
+  //if (!this.exists (data)) {
     this.es_client.create({
       index: this.index,
       type: this.type,
@@ -32,7 +32,7 @@ Indexer.prototype.publish = function (data) {
         }
       }
     });
-  }
+ // }
 }
 
 module.exports = {

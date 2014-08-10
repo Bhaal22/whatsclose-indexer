@@ -5,7 +5,6 @@ var winston = require('winston');
 
 var newCrawlModule = new CrawlerModule();
 newCrawlModule.fullUrl = 'http://www.volbeat.dk/3/dates/';
-newCrawlModule.fullUrl = 'http://www.volbeat.dk/3/dates/';
 newCrawlModule.band = new Band();
 newCrawlModule.band.name = 'Volbeat';
 newCrawlModule.band.website = 'http://www.volbeat.dk/';

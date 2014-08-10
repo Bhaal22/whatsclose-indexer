@@ -13,14 +13,14 @@ newCrawlModule.band.style.push('HardCore');
 
 // Override the method that assess the web page structure
 newCrawlModule.testDataAcess = function() {
-  winston.info('volbeat testDataAcess');
+  winston.info('tagada jones testDataAcess');
   return true;
 };
 
 // Override the method that retrieve the events data
 newCrawlModule.processData = function(window) {
 
- winston.info('volbeat processDate');
+ winston.info('tagada jones processDate');
 
   var $ = require('jquery')(window);
   var dates_table = $('table.dates_list');

@@ -1,203 +1,60 @@
-//var Promise = require('es6-promise').Promise;
+var fs = require('fs');
 var http = require('http');
 var env = require('jsdom').env;
 var Q = require('q');
 var winston = require('winston');
 
 // attributes
-var CrawlService = function () {}
+var CrawlService = function () {
+  this.crawl_modules = [];
+}
 
 // methods
 CrawlService.prototype = {
 
-	init: function(){
-		
-	}
+	init: function() {
+    console.log (__dirname);
+		// retrieve the crawlers js files
+    var crawlersDir = fs.readdirSync('./crawlers');
+    var crawlModules = [];
 
-  crawlWebData: function() {
-  
-    // #B : Promises refactor
-    var currentModule = this;
-
-    // Bind defer on http.get callback function
-    var httpGet = function (opts) {
-      var deferred = Q.defer();
-      http.get(opts, deferred.resolve);
-      return deferred.promise;
-    };
-
-    // Bind defer on ended response callback function
-    var loadBody = function (res) {
-      var deferred = Q.defer();
-      var data = '';
-      res.on('data', function (chunk) {
-          data += chunk;
-      });
-      res.on('end', function () {
-          deferred.resolve(data);
-      });
-      return deferred.promise;
-    };
-
-    // Bind defer on env (DOM extraction library) callback function
-    var envPromise = Q.nfbind(env);
-
-    // Bind defer on extractData custom function
-    var extractData = function (window){
-      var deferred = Q.defer();
-      
-      // We expect raw objects containing date & location attributes
-      var results = currentModule.processData(window);
-      for (var i = 0, ii = results.length; i < ii; i++) {
-        winston.info('New event !!!! : ' + results[i].date + ' - ' + results[i].location);
-        currentModule.band.addConcertEvent(results[i].date, results[i].location);
-      }
-      deferred.resolve(currentModule);
-      return deferred.promise;
-    }
-
-    // Defered chaining
-    httpGet(currentModule.fullUrl).then(function (res){
+    for (var i = 0, ii = crawlersDir.length; i < ii; i++) {
     
-      return loadBody(res);
-
-    }).then(function (webData) {
-      
-      return envPromise(webData);
-
-    }).then(function (window){
-      
-      return extractData(window);
-
-    }).done();
+      winston.info('Crawler file found : ' + crawlersDir[i]);
+      // Load the js files as node modules
+      var module = require('../crawlers/' + crawlersDir[i].replace(/.js$/, ""));
+      this.crawl_modules.push(module);
+    };
   },
 
+  run: function() {
+    var promises = [];
+    // Parsing every crawling module and calling the testDataAcess & crawlWebData functions
+    for (var i = 0, ii = this.crawl_modules.length; i < ii; i++) {
 
-  // Using ES6 generator features (available in node 0.11)
-  // crawlWebData_Generator: function() {
-  
-  //   // #C : Promises refactor + generator
-  //   var currentModule = this;
-
-  //   // Bind defer on http.get callback function
-  //   var httpGet = function (opts) {
-  //     var deferred = Q.defer();
-  //     http.get(opts, deferred.resolve);
-  //     return deferred.promise;
-  //   };
-
-  //   // Bind defer on ended response callback function
-  //   var loadBody = function (res) {
-  //     var deferred = Q.defer();
-  //     var data = '';
-  //     res.on('data', function (chunk) {
-  //         data += chunk;
-  //     });
-  //     res.on('end', function () {
-  //         deferred.resolve(data);
-  //     });
-  //     return deferred.promise;
-  //   };
-
-  //   // Bind defer on env (DOM extraction library) callback function
-  //   var envPromise = Q.nfbind(env);
-
-  //   // Bind defer on extractData custom function
-  //   var extractData = function (window){
-  //     var deferred = Q.defer();
-      
-  //     // We expect raw objects containing date & location attributes
-  //     var results = currentModule.processData(window);
-  //     for (var i = 0, ii = results.length; i < ii; i++) {
-  //       winston.info('New event !!!! : ' + results[i].date + ' - ' + results[i].location);
-  //       currentModule.band.addConcertEvent(results[i].date, results[i].location);
-  //     }
-  //     deferred.resolve(currentModule);
-  //     return deferred.promise;
-  //   }
-
-  //   // chaining
-  //   Q.async(function*() {
-  //     try{
-  //       var res = yield httpGet(currentModule.fullUrl);
-
-  //       var webData = yield loadBody(res);
-
-  //       var window = yield envPromise(webData);
-
-  //       var updatedModule = yield extractData(window);
-  //     }
-  //     catch(err){
-  //       winston.error('Error : ' + err);
-  //     }
-  //   })().done();
-  // },
-
-    // @deprecated
-  crawlWebData_promisesHell: function() {
+      winston.info('Start processing module : ' + this.crawl_modules[i].crawlModule.band.name);
+      if (this.crawl_modules[i].crawlModule.isValid()){
     
-    var url = this.fullUrl;
-    var currentBand = this.band;
-
-    // #A : Promises style callback handling (to replace with generators)
-    return new Promise (function (resolve, reject) {
-
-      // #01 : connect to url and retrieve DOM page
-      winston.info('#01 : connect to url and retrieve DOM page : ', url);
-      http.get(url, function (res) {
-        var data = "";
-        
-        res.on('data', function (chunk) {
-          data += chunk;
-        });
-        
-        res.on('end', function () {
-
-          // #02 : TODO : test DOM page to verify if the crawl module is outdated
-          
-          new Promise (function (resolve, reject) {
-
-            // #03 : pre-extract DOM data of interest
-            winston.info('#03 : pre-extract DOM data of interest');
-          
-            env(data, function (errors, window) {
-              if (errors != null)
-                reject (errors);
-              
-              var $ = require('jquery')(window);
-
-              var dates_table = $('table.dates_list');
-              
-              // #04 : transform DOM data to raw data
-              winston.info('#04 : transform DOM data to raw data');
-              var rows = $ ('.dates_list > tr');
-              rows.each (function (index) {
-
-                var date = $('td.dates_date', this).text ();
-                var location = $('td.dates_info2', this).text ();
-
-                // #05 : create the concert event
-                winston.info('Retrieved event : ' + currentBand.name + ' - ' + date + ' - ' + location);
-                currentBand.addConcertEvent(date, location);
-                
-              });
-
-              resolve(currentBand.concerts);
-
-            });
-          }).then (function (response) {
-           resolve(currentBand.concerts);
-          });
-        });
-        res.on('error', function(e) {
-          reject([]);
-        });
-      }).on ('error', function (e) {
-        resolve ([]);
-      });
-    });
+        // check if the page web is still well defined
+        var isPageOK = this.crawl_modules[i].crawlModule.testDataAcess();
+        if (isPageOK) {
+          winston.info('fullUrl : ' + this.crawl_modules[i].crawlModule.fullUrl);
+          var p = this.crawl_modules[i].crawlModule.crawlWebData();
+          promises.push (p);
+        }
+      }
+    };
+    return Q.all (promises);
   }
 
+// .then (function (res) {
+//       try {
+//         console.log (res[0]);
+//       } catch (e) {
+//         console.log('exception');
+//         }
+//     });
+//   }   
 }
 
-module.exports = CrawlService;
+module.exports = new CrawlService ();
