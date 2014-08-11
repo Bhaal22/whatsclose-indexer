@@ -28,7 +28,7 @@ newCrawlModule.processData = function(window) {
   rows.each (function (index) {
     var date = $('td.dates_date', this).text ();
     var location = $('td.dates_info2', this).text ();
-    results.push({date: date, location: location});
+    results.push({date: new Date(date), location: location});
 
   });
 

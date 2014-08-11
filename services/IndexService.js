@@ -15,7 +15,7 @@ var IndexService = function() {
 
 	// Indexer Initialization
 	this.index = 'whatsclose';
-	this.type = 'band';
+	this.type = 'concert';
 	
 	this.elasticSearchClient = new ElasticSearchClient(serverOptions);
 };
@@ -24,7 +24,7 @@ var IndexService = function() {
 IndexService.prototype.init = function() {
 	var self = this;
 	
-	eventEmitter.on("crawled", function(crawledModule) {
+	eventEmitter.on("index", function(crawledModule) {
 		self.publish(crawledModule);
 	});
 	
