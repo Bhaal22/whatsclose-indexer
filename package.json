@@ -5,6 +5,7 @@
 
   "dependencies": {
     "elasticsearch": "^2.3.0",
+    "elasticsearchclient": "~0.5.3",
     "q": "1.0.X",
     "geocoder": "^0.2.0",
     "jquery": "~2.1.1",

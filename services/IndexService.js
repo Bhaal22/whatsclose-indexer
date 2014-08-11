@@ -24,7 +24,7 @@ var IndexService = function() {
 IndexService.prototype.init = function() {
 	var self = this;
 	
-	eventEmitter.on("index", function(crawledModule) {
+	eventEmitter.on("geocode_ok", function(crawledModule) {
 		self.publish(crawledModule);
 	});
 	
