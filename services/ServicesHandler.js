@@ -4,7 +4,7 @@ var path = require('path');
 
 // attributes
 var ServicesHandler = function () {
-	this.services = [];
+	this.services = {};
 }
 
 // methods
@@ -24,7 +24,7 @@ ServicesHandler.prototype = {
         
         try {
           module.init ();
-  	      this.services.push(module);
+          this.services[module.moduleName] = module;
         } catch (e) {
           console.log (e);
 

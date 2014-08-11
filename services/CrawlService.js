@@ -8,6 +8,7 @@ var winston = require('winston');
 var CrawlService = function () {
   var outgoing_events = [ 'crawled'];
   this.crawl_modules = [];
+  this.moduleName = "CrawlService";
 }
 
 // methods

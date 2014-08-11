@@ -7,7 +7,7 @@ var svc_handler = require('./services/ServicesHandler.js');
 
 svc_handler.init ();
 
-var crawlPromises = svc_handler.services[0].run (); 
+var crawlPromises = svc_handler.services["CrawlService"].run();
 
 crawlPromises.then (function (res) {
   console.log (res[0].band.name);

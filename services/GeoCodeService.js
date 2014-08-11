@@ -5,6 +5,7 @@ var sleep = require('sleep');
 function GeoCoderService () {
   var outgoing_events = [ 'geocode_ok', 'geocode_multiple', 'geocode_error' ];
   var incoming_events = [ 'crawled' ];
+  this.moduleName = "GeoCoderService";
   this.init = function () {
     
   },
@@ -38,5 +39,5 @@ function GeoCoderService () {
 
 
 
-module.exports = new GeoCoderService()
+module.exports = new GeoCoderService();
 
