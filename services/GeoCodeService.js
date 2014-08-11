@@ -3,6 +3,8 @@ var geocoder = require('geocoder');
 var sleep = require('sleep');
 
 function GeoCoderService () {
+  var outgoing_events = [ 'geocode_ok', 'geocode_multiple', 'geocode_error' ];
+  var incoming_events = [ 'crawled' ];
   this.init = function () {
     
   },

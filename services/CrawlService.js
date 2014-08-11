@@ -6,6 +6,7 @@ var winston = require('winston');
 
 // attributes
 var CrawlService = function () {
+  var outgoing_events = [ 'crawled'];
   this.crawl_modules = [];
 }
 
@@ -30,20 +31,27 @@ CrawlService.prototype = {
   run: function() {
     var promises = [];
     // Parsing every crawling module and calling the testDataAcess & crawlWebData functions
-    for (var i = 0, ii = this.crawl_modules.length; i < ii; i++) {
+    var process = function (crawlModule) {
+      var band = crawlModule.band;
 
-      winston.info('Start processing module : ' + this.crawl_modules[i].crawlModule.band.name);
-      if (this.crawl_modules[i].crawlModule.isValid()){
-    
+      if (crawlModule.isValid()) {
+
+        winston.info('Start processing module : ' + band.name);
         // check if the page web is still well defined
-        var isPageOK = this.crawl_modules[i].crawlModule.testDataAcess();
+        var isPageOK = crawlModule.testDataAcess();
         if (isPageOK) {
-          winston.info('fullUrl : ' + this.crawl_modules[i].crawlModule.fullUrl);
-          var p = this.crawl_modules[i].crawlModule.crawlWebData();
-          promises.push (p);
+          winston.info('fullUrl : ' + crawlModule.fullUrl);
+          return crawlModule.crawlWebData ();
         }
       }
     };
+
+    this.crawl_modules.forEach (function (module) {
+      var p = process (module.crawlModule);
+
+      promises.push (p);
+    });
+
     return Q.all (promises);
   }
 
