@@ -2,16 +2,21 @@ var winston = require('winston');
 var fs = require('fs');
 var path = require('path');
 
+//Events
+var eventEmitter = require('./CustomEventEmitter');
+
+
 // attributes
 var ServicesHandler = function () {
 	this.services = {};
-}
+};
 
 // methods
 ServicesHandler.prototype = {
   
-  
   init: function() {
+	  
+	  var self = this;
     
   	// retrieve the crawlers js files
   	var servicesDir = fs.readdirSync('services');
@@ -27,11 +32,10 @@ ServicesHandler.prototype = {
           this.services[module.moduleName] = module;
         } catch (e) {
           console.log (e);
-
         }
       }
   	};
   }
-}
+};
 
 module.exports = new ServicesHandler ();

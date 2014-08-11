@@ -4,66 +4,70 @@ var env = require('jsdom').env;
 var Q = require('q');
 var winston = require('winston');
 
+// Events
+var eventEmitter = require('./CustomEventEmitter');
+
+var CRAWL_DATA_EVENT = "crawlData";
+var CRAWLED_EVENT = "crawled";
+
 // attributes
-var CrawlService = function () {
-  var outgoing_events = [ 'crawled'];
-  this.crawl_modules = [];
-  this.moduleName = "CrawlService";
-}
+var CrawlService = function() {
+	this.crawl_modules = [];
+	this.moduleName = "CrawlService";
+};
 
-// methods
-CrawlService.prototype = {
+// It is necessary to declare each function to keep the inheritance of EventEmitter
+CrawlService.prototype.init = function() {
+	var self = this;
+	console.log(__dirname);
+	// retrieve the crawlers js files
+	var crawlersDir = fs.readdirSync('./crawlers');
 
-	init: function() {
-    console.log (__dirname);
-		// retrieve the crawlers js files
-    var crawlersDir = fs.readdirSync('./crawlers');
-    var crawlModules = [];
+	for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
 
-    for (var i = 0, ii = crawlersDir.length; i < ii; i++) {
-    
-      winston.info('Crawler file found : ' + crawlersDir[i]);
-      // Load the js files as node modules
-      var module = require('../crawlers/' + crawlersDir[i].replace(/.js$/, ""));
-      this.crawl_modules.push(module);
-    };
-  },
+		winston.info('Crawler file found : ' + crawlersDir[i]);
+		// Load the js files as node modules
+		var module = require('../crawlers/'
+				+ crawlersDir[i].replace(/.js$/, ""));
+		this.crawl_modules.push(module);
+	};
+	
+	eventEmitter.on(CRAWL_DATA_EVENT, function() {
+		self.crawlData();
+	});
+};
 
-  run: function() {
-    var promises = [];
-    // Parsing every crawling module and calling the testDataAcess & crawlWebData functions
-    var process = function (crawlModule) {
-      var band = crawlModule.band;
+CrawlService.prototype.crawlData = function() {
+	var self = this;
+	var promises = [];
+	// Parsing every crawling module and calling the testDataAcess & crawlWebData functions
+	var process = function(crawlModule) {
+		var band = crawlModule.band;
 
-      if (crawlModule.isValid()) {
+		if (crawlModule.isValid()) {
 
-        winston.info('Start processing module : ' + band.name);
-        // check if the page web is still well defined
-        var isPageOK = crawlModule.testDataAcess();
-        if (isPageOK) {
-          winston.info('fullUrl : ' + crawlModule.fullUrl);
-          return crawlModule.crawlWebData ();
-        }
-      }
-    };
+			winston.info('Start processing module : ' + band.name);
+			// check if the page web is still well defined
+			var isPageOK = crawlModule.testDataAcess();
+			if (isPageOK) {
+				winston.info('fullUrl : ' + crawlModule.fullUrl);
+				return crawlModule.crawlWebData();
+			}
+		}
+	};
 
-    this.crawl_modules.forEach (function (module) {
-      var p = process (module.crawlModule);
+	this.crawl_modules.forEach(function(module) {
+		var p = process(module.crawlModule);
 
-      promises.push (p);
-    });
+		p.then(function(crawlModule) {
+			// Fire event "crawled"
+			eventEmitter.emit(CRAWLED_EVENT, crawlModule);
+		});
 
-    return Q.all (promises);
-  }
+		promises.push(p);
+	});
 
-// .then (function (res) {
-//       try {
-//         console.log (res[0]);
-//       } catch (e) {
-//         console.log('exception');
-//         }
-//     });
-//   }   
-}
+	return Q.all(promises);
+};
 
-module.exports = new CrawlService ();
+module.exports = new CrawlService();

@@ -1,15 +1,11 @@
 
 var winston = require('winston');
-var fs = require('fs');
-var Q = require('q');
-
+var eventEmitter = require('./services/CustomEventEmitter');
 var svc_handler = require('./services/ServicesHandler.js');
 
-svc_handler.init ();
+// Services initialization
+svc_handler.init();
 
-var crawlPromises = svc_handler.services["CrawlService"].run();
+// Entry Point for indexation
+eventEmitter.emit("crawlData");
 
-crawlPromises.then (function (res) {
-  console.log (res[0].band.name);
-  console.log (res[1].band.name);
-});
