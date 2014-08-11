@@ -2,6 +2,7 @@ var eventEmitter = require('./CustomEventEmitter');
 var Q = require('q');
 var geocoder = require('geocoder');
 var sleep = require('sleep');
+var winston = require('winston');
 
 function GeoCoderService () {
   var outgoing_events = [ 'geocode_ok', 'geocode_multiple', 'geocode_error' ];
@@ -14,10 +15,8 @@ function GeoCoderService () {
 		 if (crawledModule) {
 			 var concertsList = crawledModule.band.concerts;
 			 for ( var i = 0; i < concertsList.length; i++) {
-				var concert = concertsList[i];
-				
-				self.searchGeometry(concert.location).then(function(geo) {
-					concert.geometry = geo.location.lat + "," + geo.location.lng;
+				 
+				self.searchGeometry(concertsList[i]).then(function(concert) {				
 					eventEmitter.emit("index", concert);
 				});
 			}
@@ -25,34 +24,34 @@ function GeoCoderService () {
 	  });
   },
 
-  this.searchGeometry = function (location) {
-    var geometry = {};
+  this.searchGeometry = function (concert) {
 
-    var computeGeometry = function(location) {
+    var computeGeometry = function(concert) {
     	var deferred = Q.defer();
+    	var location = concert.location;
     	
     	geocoder.geocode(location, function ( err, data ) {
-    		var geometry = [];
 	        sleep.usleep (500000);
 	        console.log ("%s : %s", location, data.results.length);
 	        
 	        if (data.status === 'OK') {
-	          geometry = data.results[0].geometry;
-	          deferred.resolve (geometry);
+	          var geometry = data.results[0].geometry;
+	          concert.geometry = geometry;
+	          deferred.resolve(concert);
 	        }
 	        else {
 	          var notIndexedConcertIndex = 'concerts_in_error';
 	          //indexer.publish (concert, notIndexedConcertIndex);
 	          winston.error("error getting geometry");
 	          console.log (data);
-	          deferred.resolve (geometry);
+	          deferred.resolve(concert);
 	        }
 	    });
     	
     	return deferred.promise;
     };
     
-    return computeGeometry(location);
+    return computeGeometry(concert);
     
   };
 };
