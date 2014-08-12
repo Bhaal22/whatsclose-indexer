@@ -16,8 +16,6 @@ ServicesHandler.prototype = {
   
   init: function() {
 	  
-	  var self = this;
-    
   	// retrieve the crawlers js files
   	var servicesDir = fs.readdirSync('services');
   	for (var i = 0, ii = servicesDir.length; i < ii; i++) {

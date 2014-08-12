@@ -16,7 +16,6 @@ var CrawlService = function() {
 	this.moduleName = "CrawlService";
 };
 
-// It is necessary to declare each function to keep the inheritance of EventEmitter
 CrawlService.prototype.init = function() {
 	var self = this;
 	console.log(__dirname);
