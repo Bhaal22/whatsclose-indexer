@@ -1,4 +1,3 @@
-var winston = require('winston');
 var fs = require('fs');
 var path = require('path');
 
@@ -14,7 +13,7 @@ var ServicesHandler = function () {
 // methods
 ServicesHandler.prototype = {
   
-  init: function() {
+  init: function(winston) {
 	  
 	  var self = this;
     
@@ -28,7 +27,7 @@ ServicesHandler.prototype = {
   	    var module = require('./' + servicesDir[i].replace(/.js$/, ""));
         
         try {
-          module.init ();
+          module.init (winston);
           this.services[module.moduleName] = module;
         } catch (e) {
           console.log (e);

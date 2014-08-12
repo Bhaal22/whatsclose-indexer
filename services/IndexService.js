@@ -16,12 +16,14 @@ var IndexService = function() {
 	// Indexer Initialization
 	this.index = 'whatsclose';
 	this.type = 'concert';
+  this.logger = {};
 	
 	this.elasticSearchClient = new ElasticSearchClient(serverOptions);
 };
 
 // It is necessary to declare each function to keep the inheritance of EventEmitter
-IndexService.prototype.init = function() {
+IndexService.prototype.init = function(winston) {
+  this.logger = winston;
 	var self = this;
 	
 	eventEmitter.on("geocode_ok", function(crawledModule) {
@@ -35,10 +37,10 @@ IndexService.prototype.publish = function(document) {
 	winston.info("publishing to ES : %j", document);
 	this.elasticSearchClient.index(this.index, this.type, document)
 		.on("data", function(data) {
-			winston.info("Publishing OK : %j", data);
+			this.logger.info("Publishing OK : %j", data);
 		})
 		.on("error", function(error) {
-			winston.error("NOT COOL : %s", error);
+			this.logger.error("NOT COOL : %s", error);
 		})
 		.exec();
 };

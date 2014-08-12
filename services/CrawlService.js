@@ -2,7 +2,6 @@ var fs = require('fs');
 var http = require('http');
 var env = require('jsdom').env;
 var Q = require('q');
-var winston = require('winston');
 
 // Events
 var eventEmitter = require('./CustomEventEmitter');
@@ -14,18 +13,20 @@ var CRAWLED_EVENT = "crawled";
 var CrawlService = function() {
 	this.crawl_modules = [];
 	this.moduleName = "CrawlService";
+  this.logger = {};
 };
 
 // It is necessary to declare each function to keep the inheritance of EventEmitter
-CrawlService.prototype.init = function() {
+CrawlService.prototype.init = function(winston) {
+  this.logger = winston;
+
 	var self = this;
-	console.log(__dirname);
 	// retrieve the crawlers js files
 	var crawlersDir = fs.readdirSync('./crawlers');
 
 	for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
 
-		winston.info('Crawler file found : ' + crawlersDir[i]);
+		this.logger.info('Crawler file found : ' + crawlersDir[i]);
 		// Load the js files as node modules
 		var module = require('../crawlers/'
 				+ crawlersDir[i].replace(/.js$/, ""));
@@ -46,11 +47,11 @@ CrawlService.prototype.crawlData = function() {
 
 		if (crawlModule.isValid()) {
 
-			winston.info('Start processing module : ' + band.name);
+			self.logger.warn('Start processing module : ' + band.name);
 			// check if the page web is still well defined
 			var isPageOK = crawlModule.testDataAcess();
 			if (isPageOK) {
-				winston.info('fullUrl : ' + crawlModule.fullUrl);
+				self.logger.info('fullUrl : ' + crawlModule.fullUrl);
 				return crawlModule.crawlWebData();
 			}
 		}
