@@ -21,6 +21,7 @@ var IndexService = function() {
 	this.elasticSearchClient = new ElasticSearchClient(serverOptions);
 };
 
+
 // It is necessary to declare each function to keep the inheritance of EventEmitter
 IndexService.prototype.init = function(winston) {
   this.logger = winston;

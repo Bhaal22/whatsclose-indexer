@@ -16,10 +16,8 @@ var CrawlService = function() {
   this.logger = {};
 };
 
-// It is necessary to declare each function to keep the inheritance of EventEmitter
 CrawlService.prototype.init = function(winston) {
   this.logger = winston;
-
 	var self = this;
 	// retrieve the crawlers js files
 	var crawlersDir = fs.readdirSync('./crawlers');
