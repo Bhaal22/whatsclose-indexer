@@ -4,16 +4,42 @@ var svc_handler = require('./services/ServicesHandler.js');
 var argv = require('yargs').argv;
 
 var init_logger = function () { 
-
-  var custom_log_levels = {
+  winston = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)({
+        level: 'trace',
+        prettyPrint: true,
+        colorize: true,
+        silent: false,
+        timestamp: false
+      })
+    ],
+    levels: {
+      trace: 0,
+      input: 1,
+      verbose: 2,
+      prompt: 3,
+      debug: 4,
+      info: 5,
+      data: 6,
+      help: 7,
+      warn: 8,
+      error: 9
+    },
     colors: {
-      log: 'white',
+      trace: 'magenta',
+      input: 'grey',
+      verbose: 'cyan',
+      prompt: 'grey',
+      debug: 'blue',
+      info: 'green',
+      data: 'grey',
+      help: 'cyan',
       warn: 'yellow',
       error: 'red'
     }
-  }
+  });
 
-  winston.addColors(custom_log_levels.colors);
 };
 
 init_logger ();
