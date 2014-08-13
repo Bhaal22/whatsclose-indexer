@@ -53,6 +53,9 @@ function GeoCoderService () {
 	      
 	      if (data.status === 'OK') {
 	        var geometry = data.results[0].geometry;
+
+	        concert.geometry = geometry.location.lat + "," + geometry.location.lng;
+          // eventEmitter.emit("geocode_ok", concert);
 	        deferred.resolve(data.results);
 	      }
 	      else {
