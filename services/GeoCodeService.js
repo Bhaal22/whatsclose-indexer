@@ -40,7 +40,7 @@ function GeoCoderService () {
 	      
 	      if ((data.status === 'OK') && (data.results.length == 1)) {
 	        var geometry = data.results[0].geometry;
-	        concert.geometry = geometry;
+	        concert.geometry = geometry.location.lat + "," + geometry.location.lng;
           // eventEmitter.emit("geocode_ok", concert);
 	        deferred.resolve(concert);
 	      }
