@@ -49,8 +49,9 @@ function GeoCoderService () {
         
 	      if (data.status === 'OK') {
           if (data.results.length === 1) {
-            concert.geometry = data.results[0];
-					  eventEmitter.emit("geocode_ok", concert);
+        	  var geometry = data.results[0].geometry;
+        	  concert.geometry = geometry.location.lat + "," + geometry.location.lng;
+        	  eventEmitter.emit("geocode_ok", concert);
           }
           else {
             winston.warn ("multiple geometries for laction %s", location);
@@ -70,7 +71,7 @@ function GeoCoderService () {
         console.log ('exception %s', e);
       }
     });
-  }
+  };
 };
 
 
