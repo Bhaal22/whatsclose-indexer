@@ -4,7 +4,8 @@ var Concert = function () {
   this.date;
   this.location;
   this.geometry;
-}
+  this.style;
+};
 
 // methods
 // CrawlerModule.prototype = {
