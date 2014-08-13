@@ -23,12 +23,19 @@ CrawlService.prototype.init = function(winston) {
 	var crawlersDir = fs.readdirSync('./crawlers');
 
 	for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
+    var band_file_name = crawlersDir[i];
+    var regex = /.js$/;
 
-		this.logger.info('Crawler file found : ' + crawlersDir[i]);
-		// Load the js files as node modules
-		var module = require('../crawlers/'
-				+ crawlersDir[i].replace(/.js$/, ""));
-		this.crawl_modules.push(module);
+    var match = band_file_name.match(regex);
+
+    if (match) {
+
+		  this.logger.info('Crawler file found : ' + band_file_name);
+		  // Load the js files as node modules
+		  var module = require('../crawlers/'
+				                   + band_file_name.replace(/.js$/, ""));
+		  this.crawl_modules.push(module);
+    }
 	};
 	
 	eventEmitter.on(CRAWL_DATA_EVENT, function() {

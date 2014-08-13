@@ -18,11 +18,17 @@ ServicesHandler.prototype = {
   	// retrieve the crawlers js files
   	var servicesDir = fs.readdirSync('services');
   	for (var i = 0, ii = servicesDir.length; i < ii; i++) {
-  	  if (servicesDir[i] != path.basename (__filename)) {
-  	    winston.info('service file found : ' + servicesDir[i]);
+      var file_name = servicesDir[i];
+      var regex = /.js$/;
+
+      var match = file_name.match(regex);
+      
+
+  	  if ((servicesDir[i] != path.basename (__filename)) && (match)) {
+  	    winston.info('service file found : ' + file_name);
   	    
   	    // Load the js files as node modules
-  	    var module = require('./' + servicesDir[i].replace(/.js$/, ""));
+  	    var module = require('./' + file_name.replace(/.js$/, ""));
         
         try {
           module.init (winston);
