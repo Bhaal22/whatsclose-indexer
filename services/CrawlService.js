@@ -2,6 +2,7 @@ var fs = require('fs');
 var http = require('http');
 var env = require('jsdom').env;
 var Q = require('q');
+var winston = require('./CustomWinston.js');
 
 // Events
 var eventEmitter = require('./CustomEventEmitter');
@@ -13,11 +14,9 @@ var CRAWLED_EVENT = "crawled";
 var CrawlService = function() {
 	this.crawl_modules = [];
 	this.moduleName = "CrawlService";
-  this.logger = {};
 };
 
-CrawlService.prototype.init = function(winston) {
-  this.logger = winston;
+CrawlService.prototype.init = function() {
 	var self = this;
 	// retrieve the crawlers js files
 	var crawlersDir = fs.readdirSync('./crawlers');
@@ -30,7 +29,7 @@ CrawlService.prototype.init = function(winston) {
 
     if (match) {
 
-		  this.logger.info('Crawler file found : ' + band_file_name);
+		  winston.info('Crawler file found : ' + band_file_name);
 		  // Load the js files as node modules
 		  var module = require('../crawlers/'
 				                   + band_file_name.replace(/.js$/, ""));
@@ -52,11 +51,11 @@ CrawlService.prototype.crawlData = function() {
 
 		if (crawlModule.isValid()) {
 
-			self.logger.warn('Start processing module : ' + band.name);
+			winston.warn('Start processing module : ' + band.name);
 			// check if the page web is still well defined
 			var isPageOK = crawlModule.testDataAcess();
 			if (isPageOK) {
-				self.logger.info('fullUrl : ' + crawlModule.fullUrl);
+				winston.info('fullUrl : ' + crawlModule.fullUrl);
 				return crawlModule.crawlWebData();
 			}
 		}

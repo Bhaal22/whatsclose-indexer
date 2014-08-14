@@ -1,4 +1,4 @@
-var winston = require('winston');
+var winston = require('./CustomWinston.js');
 
 var eventEmitter = require('./CustomEventEmitter');
 

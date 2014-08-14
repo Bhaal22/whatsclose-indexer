@@ -2,7 +2,7 @@ var eventEmitter = require('./CustomEventEmitter');
 var Q = require('q');
 var geocoder = require('geocoder');
 var sleep = require('sleep');
-var winston = require('winston');
+var winston = require('./CustomWinston.js');
 
 function GeoCoderService () {
   var outgoing_events = [ 'geocode_ok', 'geocode_multiple', 'geocode_error' ];
@@ -17,59 +17,59 @@ function GeoCoderService () {
 			  var concertsList = crawledModule.band.concerts;
 
 
-			  for ( var i = 0; i < concertsList.length; i++) {
-				  self.searchGeometry(concertsList[i]);
-			  }
+        concertsList.forEach (function (concert) {
+          self.searchGeometry(concert).then (function (data) {
+            if (data.results.length === 1) {
+        	    var geometry = data.results[0].geometry;
+
+        	    concert.geometry = geometry.location.lat + "," + geometry.location.lng;
+        	    eventEmitter.emit("geocode_ok", concert);
+            }
+            else {
+              var location = concert.location;
+              winston.warn ("multiple geometries for location %s", location);
+              eventEmitter.emit("geocode_multiple", { 
+                concert: concert,
+                geometries: data.results
+              });
+            }
+
+          }).fail (function (error) {
+            winston.error("error getting geometry");
+	          console.log (error);
+            eventEmitter.emit ("geocode_error", error);
+          });
+        });
 		  }
 	  });
   },
 
   this.searchGeometry = function (concert) {
-
-    var geocoderPromisify = function(location) {
-      var deferred = Q.defer();
-
-      geocoder.geocode(location, function (err, data) {
-        if (err) deferred.reject(err);
-        else deferred.resolve(data);
-      });
-      return deferred.promise;
-    };
-
-
-    //var geocoderPromisify = Q.denodify(geocoder.geocode);
-
+    var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
     var location = concert.location;
 
-    geocoderPromisify(location).then (function (data) {
+    winston.warn("location = ", location);
+
+    return geocoderPromisify(location).then (function (data) {
+      var deferred = Q.defer ();
       sleep.usleep (500000);
-	    //console.log (data);
 
       try {
         
 	      if (data.status === 'OK') {
-          if (data.results.length === 1) {
-        	  var geometry = data.results[0].geometry;
-        	  concert.geometry = geometry.location.lat + "," + geometry.location.lng;
-        	  eventEmitter.emit("geocode_ok", concert);
-          }
-          else {
-            winston.warn ("multiple geometries for laction %s", location);
-            eventEmitter.emit("geocode_multiple", { 
-              concert: concert,
-              geometries: data.results
-            });
-          }
+          deferred.resolve (data);
 	      }
 	      else {
-	        winston.error("error getting geometry");
-	        console.log (data);
-          eventEmitter.emit ("geocode_error", concert);
-	        //deferred.resolve(Error (location));
+          winston.error (data);
+          deferred.reject(Error (location));
 	      }
       } catch(e) {
         console.log ('exception %s', e);
       }
+
+      return deferred.promise;
+    }).fail (function (err) {
+      console.log (err);
     });
   };
 };
