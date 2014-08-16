@@ -4,11 +4,6 @@ var winston = require('./CustomWinston');
 // It seems that elasticsearch.Client doens't close the connection, that's why the indexer doesn't stop... => using elasticsearchclient instead
 var ElasticSearchClient = require('elasticsearchclient');
 
-var serverOptions = {
-	host : 'localhost',
-	port : 9200,
-};
-
 var IndexService = function() {
 	this.moduleName = "IndexService";
 
@@ -17,7 +12,6 @@ var IndexService = function() {
 	this.type = 'concert';
 	
   this.indexers = [];
-	//this.elasticSearchClient = new ElasticSearchClient(serverOptions);
 };
 
 
@@ -33,15 +27,13 @@ IndexService.prototype.init = function() {
     if (match) {
     
   	  winston.info('indexer service file found : ' + indexer_file);
-  	  
-      //  	var m = require('./indexer.es/Band.Indexer.js').indexer;
       var module = require('./indexer.es/' + indexer_file.replace(/.js$/, "")).indexer;
       
       try {
         var indexer = new module ();
         indexer.init();
       } catch (e) {
-        winston.error(e.toString());
+        console.trace (e);
       }
     }
   });

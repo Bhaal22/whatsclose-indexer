@@ -1,13 +1,13 @@
-var root_indexer = require("./Indexer.js").I;
+var root_indexer = require("./Indexer.js");
 var winston = require('../CustomWinston');
-var es = require('elasticsearch');
 var eventEmitter = require('../CustomEventEmitter');
+var Q = require('q');
 
 function ConcertIndexer () {
-    this.type = 'concert';
+  this.type = 'concert';
 }
 
-ConcertIndexer.prototype = new root_indexer();
+ConcertIndexer.prototype = new root_indexer.I();
 
 ConcertIndexer.prototype.init = function () {
   var self = this;
@@ -20,19 +20,34 @@ ConcertIndexer.prototype.init = function () {
 }
 
 ConcertIndexer.prototype.exists = function (data) {
-    return this.es_client.search ({
-        index: this.index,
-        body: {
-            query: {
-                match: {
-                    band_name: data.band_name,
-                    date: data.date
-                    }
-                }
+  
+
+  return this.es_client.search ({
+    index: this.index,
+    body: {
+      query: {
+        bool: {
+          must: [
+            { match: { 'bandName' : data.bandName }},
+            { match: { 'date': data.date }}
+          ]
         }
+      }
+    }
+  })
+    .then (function (body) {
+      var deferred = Q.defer();
+      var results = body.hits.total;
+      
+      if (results === 0)
+        deferred.reject (Error (results));
+      else
+        deferred.resolve ();
+
+      return deferred.promise;
     });
 }
 
-module.exports = {
-  indexer: ConcertIndexer
-};
+  module.exports = {
+    indexer: ConcertIndexer
+  };

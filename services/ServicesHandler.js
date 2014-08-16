@@ -36,7 +36,7 @@ ServicesHandler.prototype = {
           module.init ();
           this.services[module.moduleName] = module;
         } catch (e) {
-          console.log (e);
+          console.trace (e);
         }
       }
   	};

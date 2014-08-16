@@ -1,5 +1,6 @@
 var winston = require('../CustomWinston');
 var es = require('elasticsearch');
+var Q = require('q');
 
 function Indexer () {
   this.index = 'whatsclose';
@@ -20,24 +21,21 @@ Indexer.prototype.exists = function (data) {
 }
 
 Indexer.prototype.publish = function (data) {
+  var self = this;
+  var concert = data;
 
-  //if (!this.exists (data)) {
-  this.es_client.create({
-    index: this.index,
-    type: this.type,
-    body: data
-  }, function (error, response) {
-    if (error) {
-      winston.error("NOT COOL! [" + error + "]");
-    } else {
-      if (response) {
-        winston.log(response);
-      } else {
-        winston.log("vas savoir ^^");
-      }
-    }
-  });
-  // }
+  this.exists (data)
+    .catch (function (error) {
+     
+      self.es_client.create({
+        index: self.index,
+        type: self.type,
+        body: concert
+      }, function (err, resp) {
+        console.log ('error %s', err);
+        console.log ('resp %s', resp);
+      });
+    });
 }
 
 module.exports = {

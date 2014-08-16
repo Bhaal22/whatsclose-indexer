@@ -21,30 +21,37 @@ function GeoCoderService () {
           self.searchGeometry(concert).then (function (data) {
             if (data.results.length === 1) {
         	    var geometry = data.results[0].geometry;
-
-        	    concert.geometry.lat = geometry.location.lat;
-              concert.geometry.lon = geometry.location.lng;
+              
+        	    concert.geometry = geometry.location;
         	    eventEmitter.emit("geocode_ok", concert);
             }
             else {
               var location = concert.location;
               winston.warn ("multiple geometries for location %s %d", location, data.results.length);
-
-              var geometries = data.results.map (function (geometry) {
-                var conv = {};
-                conv.lat = geometry.location.lat;
-                conv.long = geometry.location.lng;
-              });
-
-              eventEmitter.emit("geocode_multiple", { 
-                concert: concert,
-                geometries: geometries
-              });
+              try {
+                var geometries = data.results.map (function (geometry) {
+                  
+                  var conv = {
+                    location: geometry.formatted_address,
+                    lat: geometry.geometry.location.lat,
+                    lng: geometry.geometry.location.lng
+                  };
+                  
+                  return conv;
+                });
+                
+                eventEmitter.emit("geocode_multiple", { 
+                  concert: concert,
+                  geometries: geometries
+                });
+              } catch (e) {
+                winston.err (e);
+              }
             }
-
+            
           }).fail (function (error) {
             winston.error("error getting geometry");
-	          console.log (error);
+	          console.log (error.stack);
             eventEmitter.emit ("geocode_error", error);
           });
         });
@@ -55,8 +62,6 @@ function GeoCoderService () {
   this.searchGeometry = function (concert) {
     var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
     var location = concert.location;
-
-    winston.warn("location = ", location);
 
     return geocoderPromisify(location).then (function (data) {
       var deferred = Q.defer ();
