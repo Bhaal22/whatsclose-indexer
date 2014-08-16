@@ -1,4 +1,3 @@
-var winston = require('./services/CustomWinston.js');
 var eventEmitter = require('./services/CustomEventEmitter');
 var svc_handler = require('./services/ServicesHandler.js');
 var argv = require('yargs').argv;
@@ -16,7 +15,7 @@ if (argv.help) {
 } else {
   
   // Services initialization
-  svc_handler.init(winston);
+  svc_handler.init();
   
   // Entry Point for indexation
   eventEmitter.emit("crawlData");

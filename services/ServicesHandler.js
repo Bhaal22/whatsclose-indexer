@@ -1,19 +1,21 @@
 var fs = require('fs');
 var path = require('path');
 
+var winston = require ('./CustomWinston');
+
 //Events
 var eventEmitter = require('./CustomEventEmitter');
 
 
 // attributes
 var ServicesHandler = function () {
-	this.services = {};
+	this.services = [];
 };
 
 // methods
 ServicesHandler.prototype = {
   
-  init: function(winston) {
+  init: function() {
 	  
   	// retrieve the crawlers js files
   	var servicesDir = fs.readdirSync('services');
@@ -31,7 +33,7 @@ ServicesHandler.prototype = {
   	    var module = require('./' + file_name.replace(/.js$/, ""));
         
         try {
-          module.init (winston);
+          module.init ();
           this.services[module.moduleName] = module;
         } catch (e) {
           console.log (e);

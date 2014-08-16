@@ -22,15 +22,23 @@ function GeoCoderService () {
             if (data.results.length === 1) {
         	    var geometry = data.results[0].geometry;
 
-        	    concert.geometry = geometry.location.lat + "," + geometry.location.lng;
+        	    concert.geometry.lat = geometry.location.lat;
+              concert.geometry.lon = geometry.location.lng;
         	    eventEmitter.emit("geocode_ok", concert);
             }
             else {
               var location = concert.location;
-              winston.warn ("multiple geometries for location %s", location);
+              winston.warn ("multiple geometries for location %s %d", location, data.results.length);
+
+              var geometries = data.results.map (function (geometry) {
+                var conv = {};
+                conv.lat = geometry.location.lat;
+                conv.long = geometry.location.lng;
+              });
+
               eventEmitter.emit("geocode_multiple", { 
                 concert: concert,
-                geometries: data.results
+                geometries: geometries
               });
             }
 
