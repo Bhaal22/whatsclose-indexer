@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "nock": "0.45.x",
-    "expect": "0.1.x",
+    "expect.js": "0.3.x",
     "superagent": "0.18.x"
   }
 }

@@ -3,8 +3,8 @@ var expect = require('expect.js');
 
 var volbeat = require('../../../crawlers/volbeat').crawlModule;
 
-describe('Suite one', function(){
-  it('test date generation', function(done){
+describe('Volbeat Suite', function(){
+  it('test date range generation', function(done){
     
     var date = volbeat.date ("04-05 Oct 2014");
 

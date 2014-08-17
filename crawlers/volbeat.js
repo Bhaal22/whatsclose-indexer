@@ -22,7 +22,6 @@ newCrawlModule.date = function (d) {
   var date_return;
   var match = d.match(regex);
 
-  console.log ("match %s", match);
   if (match) {
     var range = match[1];
     var last = match[2];
