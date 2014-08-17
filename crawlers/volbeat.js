@@ -16,6 +16,27 @@ newCrawlModule.testDataAcess = function() {
   return true;
 };
 
+newCrawlModule.date = function (d) {
+  var regex = /(\d+-\d+)(.*)/;
+
+  var date_return;
+  var match = d.match(regex);
+
+  console.log ("match %s", match);
+  if (match) {
+    var range = match[1];
+    var last = match[2];
+
+    var days = range.split(/-/);
+
+    date_return = new Date(days[0] + last);
+  } else {
+    date_return = new Date(d);
+  } 
+
+  return date_return;
+}
+
 // Override the method that retrieve the events data
 newCrawlModule.processData = function(window) {
   winston.info('volbeat processDate');
@@ -28,7 +49,7 @@ newCrawlModule.processData = function(window) {
   rows.each (function (index) {
     var date = $('td.dates_date', this).text ();
     var location = $('td.dates_info2', this).text ();
-    results.push({date: new Date(date), location: location});
+    results.push({date: this.date (date), location: location});
 
   });
 
