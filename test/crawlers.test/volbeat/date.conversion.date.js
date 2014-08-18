@@ -4,11 +4,32 @@ var expect = require('expect.js');
 var volbeat = require('../../../crawlers/volbeat').crawlModule;
 
 describe('Volbeat Suite', function(){
+  it('get Volbeat Tour generation', function(done){
+
+    volbeat.crawlWebData().
+      then (function (data) {
+       
+        var concerts = volbeat.band.concerts;
+        expect(concerts).to.not.be.empty();
+
+        done ();
+      });
+  });
+
   it('test date range generation', function(done){
     
     var date = volbeat.date ("04-05 Oct 2014");
 
-    expect(date.toString()).to.equal("Sat Oct 04 2014 00:00:00 GMT+0200 (CEST)");
+    expect(date).to.equal('2014-10-04');
+
+    done ();
+  });
+
+  it('test date 16 Sep 2014', function(done){
+    
+    var date = volbeat.date ("16 Sep 2014");
+
+    expect(date).to.equal('2014-09-16');
 
     done ();
   });

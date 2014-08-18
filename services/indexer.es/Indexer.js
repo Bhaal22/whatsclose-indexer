@@ -32,8 +32,11 @@ Indexer.prototype.publish = function (data) {
         type: self.type,
         body: concert
       }, function (err, resp) {
-        console.log ('error %s', err);
-        console.log ('resp %s', resp);
+        if (err != undefined)
+          console.log ('error %s', err);
+
+        //console.log ('resp %s', resp);
+        //console.log(resp);
       });
     });
 }

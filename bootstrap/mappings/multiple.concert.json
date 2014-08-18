@@ -1,7 +1,9 @@
-"concert" : {
-  "band_name" : { "type" : "string" },
-  "styles" : { "type": "string", "index_name" : "style" },
-  "date" : { "type" : "date" },
-  "location" : { "type" : "string" },
-  "geopositions" : { "type" : "geo_point", "index_name" : "geo"}
+"multiple.concert" : {
+  "properties": {
+    "band_name" : { "type" : "string" },
+    "styles" : { "type": "string", "index_name" : "style" },
+    "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
+    "location" : { "type" : "string" },
+    "geopositions" : { "type" : "geo_point", "index_name" : "geo"}
+  }
 }

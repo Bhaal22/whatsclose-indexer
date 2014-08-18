@@ -22,7 +22,10 @@ function GeoCoderService () {
             if (data.results.length === 1) {
         	    var geometry = data.results[0].geometry;
               
-        	    concert.geometry = geometry.location;
+        	    concert.geometry = {
+                lat: geometry.location.lat,
+                lon: geometry.location.lng 
+              };
         	    eventEmitter.emit("geocode_ok", concert);
             }
             else {
@@ -34,7 +37,7 @@ function GeoCoderService () {
                   var conv = {
                     location: geometry.formatted_address,
                     lat: geometry.geometry.location.lat,
-                    lng: geometry.geometry.location.lng
+                    lon: geometry.geometry.location.lng
                   };
                   
                   return conv;

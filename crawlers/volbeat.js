@@ -1,6 +1,7 @@
 var Band = require('../model/Band');
 var CrawlerModule = require('../model/CrawlerModule');
 var winston = require('winston');
+require('datejs');
 
 
 var newCrawlModule = new CrawlerModule();
@@ -30,10 +31,10 @@ newCrawlModule.date = function (d) {
 
     date_return = new Date(days[0] + last);
   } else {
-    date_return = new Date(d);
+      date_return = Date.parse(d);
   } 
-
-  return date_return;
+  
+  return date_return.toString('yyyy-MM-dd');
 }
 
 // Override the method that retrieve the events data
@@ -43,12 +44,15 @@ newCrawlModule.processData = function(window) {
   var $ = require('jquery')(window);
   var dates_table = $('table.dates_list');
   
+  var self = this;
   var results = [];
   var rows = $ ('.dates_list > tr');
+  console.log('volbeat entries: ', rows.length);
   rows.each (function (index) {
     var date = $('td.dates_date', this).text ();
     var location = $('td.dates_info2', this).text ();
-    results.push({date: this.date (date), location: location});
+
+    results.push({date: self.date (date), location: location});
 
   });
 

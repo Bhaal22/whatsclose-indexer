@@ -1,6 +1,7 @@
 var Band = require('../model/Band');
 var CrawlerModule = require('../model/CrawlerModule');
 var winston = require('winston');
+require('datejs');
 
 
 var newCrawlModule = new CrawlerModule();
@@ -27,13 +28,15 @@ newCrawlModule.processData = function(window) {
 	var rows = $ ('#scroll-content-dates > ul > li');
 	
   var results = [];
+
+  console.log('tagada jones entries: ', rows.length);
   rows.each (function (index) {
     var date = $('span.DateDate', this).text ();
 		var fullLocation = $(this).text ();
 		var location = fullLocation.split ('\n')[2].trim ();
 		var dateElements = date.split ("/");
 		
-		results.push({date: new Date (dateElements[2], dateElements[1], dateElements[0]), location: location});
+		results.push({date: new Date (dateElements[2], dateElements[1], dateElements[0]).toString('yyyy-MM-dd'), location: location});
 
   });
 

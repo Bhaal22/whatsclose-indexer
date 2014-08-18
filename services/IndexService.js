@@ -39,18 +39,4 @@ IndexService.prototype.init = function() {
   });
 };
 
-
-// IndexService.prototype.publish = function(document) {
-	
-// 	winston.info("publishing to ES : %j", document);
-// 	this.elasticSearchClient.index(this.index, this.type, document)
-// 		.on("data", function(data) {
-// 			winston.info("Publishing OK : %j", data);
-// 		})
-// 		.on("error", function(error) {
-//       winston.error("NOT COOL : %s", error);
-// 		})
-// 		.exec();
-// };
-
 module.exports = new IndexService;

@@ -13,7 +13,7 @@ MultipleConcertIndexer.prototype.init = function () {
   var self = this;
 	
 	eventEmitter.on("geocode_multiple", function(crawledModule) {
-		self.publish(crawledModule);
+	  self.publish(crawledModule);
 	});
 }
 
