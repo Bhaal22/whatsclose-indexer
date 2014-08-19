@@ -1,9 +1,21 @@
 "concert" : {
   "properties": {
-    "band_name" : { "type" : "string" },
+    "bandName" : { 
+      "type": "multi_field",
+      "fields": {
+        "exact": {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "not_exact": {
+          "type": "string",
+          "analyzer": "standard"
+        }
+      }
+    },
     "styles" : { "type": "string", "index_name" : "style" },
     "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
     "location" : { "type" : "string" },
-    "geo" : { "type" : "geo_point" }
+    "geometry" : { "type" : "geo_point"}
   }
 }

@@ -1,9 +1,21 @@
 "multiple.concert" : {
   "properties": {
-    "band_name" : { "type" : "string" },
-    "styles" : { "type": "string", "index_name" : "style" },
+    "bandName" : { 
+      "type": "multi_field",
+      "fields": {
+        "exact": {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "not_exact": {
+          "type": "string",
+          "analyzer": "standard"
+        }
+      }
+    },
+    "styles" : { "type": "string", "index_name" : "s" },
     "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
     "location" : { "type" : "string" },
-    "geopositions" : { "type" : "geo_point", "index_name" : "geo"}
-  }
+    "geometries" : { "type" : "geo_point", "index_name" : "geo"} 
+  } 
 }
