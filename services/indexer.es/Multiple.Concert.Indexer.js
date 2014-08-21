@@ -18,7 +18,7 @@ MultipleConcertIndexer.prototype.init = function () {
 }
 
 MultipleConcertIndexer.prototype.exists = function (data) {
-  var concert = data.concert;
+  var concert = data;
 
   return this.es_client.search ({
     index: this.index,

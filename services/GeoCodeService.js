@@ -35,20 +35,26 @@ function GeoCoderService () {
                 var geometries = data.results.map (function (geometry) {
                   
                   var conv = {
-                    location: geometry.formatted_address,
+                    formatted_address: geometry.formatted_address,
                     lat: geometry.geometry.location.lat,
                     lon: geometry.geometry.location.lng
                   };
                   
                   return conv;
                 });
-                
-                eventEmitter.emit("geocode_multiple", { 
-                  concert: concert,
+
+                var send = {
+                  bandName: concert.bandName,
+                  date: concert.date,
+                  location: concert.location,
+                  styles: concert.style,
                   geometries: geometries
-                });
+                };
+
+                eventEmitter.emit("geocode_multiple", send);
               } catch (e) {
-                winston.err (e);
+                console.log (e);
+                console.log(e.stack);
               }
             }
             

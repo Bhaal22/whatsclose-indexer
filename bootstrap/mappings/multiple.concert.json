@@ -13,9 +13,14 @@
         }
       }
     },
-    "styles" : { "type": "string", "index_name" : "s" },
+    "styles" : { "type": "string", "index_name" : "tyle" },
     "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
     "location" : { "type" : "string" },
-    "geometries" : { "type" : "geo_point", "index_name" : "geo"} 
+    "geometries" : { "type" : "nested", "index_name": "geo",
+                     "properties": {
+                       "formatted_address" : { "type": "string" },
+                       "geometry" : { "type": "geo_point" }
+                     }
+                   } 
   } 
 }
