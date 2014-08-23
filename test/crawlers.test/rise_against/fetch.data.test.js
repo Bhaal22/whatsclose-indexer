@@ -16,6 +16,20 @@ describe('Rise Against Suite', function(){
       });
   });
 
+  it('checks Rise Against stylez', function(done){
+
+    rise_against.crawlWebData().
+      then (function (data) {
+       
+        var styles = rise_against.styles;
+        expect(styles[0]).to.equal("Melodic hardcore");
+        expect(styles[1]).to.equal("punk rock");
+        
+
+        done ();
+      });
+  });
+
   it('Rise Against special dates', function(done){
     
     var date = rise_against.date ("7/31-8/3/2014");

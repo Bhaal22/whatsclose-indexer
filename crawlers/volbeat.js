@@ -9,7 +9,7 @@ newCrawlModule.fullUrl = 'http://www.volbeat.dk/3/dates/';
 newCrawlModule.band = new Band();
 newCrawlModule.band.name = 'Volbeat';
 newCrawlModule.band.website = 'http://www.volbeat.dk/';
-newCrawlModule.band.style.push('Metal');
+newCrawlModule.band.styles = ['Metal'];
 
 // Override the method that assess the web page structure
 newCrawlModule.testDataAcess = function() {

@@ -9,7 +9,6 @@ var IndexService = function() {
 
 	// Indexer Initialization
 	this.index = 'whatsclose';
-	this.type = 'concert';
 	
   this.indexers = [];
 };
@@ -39,4 +38,4 @@ IndexService.prototype.init = function() {
   });
 };
 
-module.exports = new IndexService;
+module.exports = new IndexService();

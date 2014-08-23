@@ -5,7 +5,7 @@ var winston = require('winston');
 var Band = function () {
   this.name; 
   this.website;
-  this.style = [];
+  this.styles = [];
   this.concerts = [];
 }
 	
@@ -21,12 +21,10 @@ Band.prototype = {
 		event.date = date;
   	event.location = location;
 		
-		// bandname to remove ?
-  		// JC => we're indexing concert (right?). How do you know what group it is if not indexed in the concet document ?
 		event.bandName = this.name;
 		
 		// Same goes for the style
-		event.style = this.style;
+		event.styles = this.styles;
 
 		this.concerts.push(event);
 	}

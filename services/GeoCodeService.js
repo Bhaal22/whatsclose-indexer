@@ -47,7 +47,7 @@ function GeoCoderService () {
                   bandName: concert.bandName,
                   date: concert.date,
                   location: concert.location,
-                  styles: concert.style,
+                  styles: concert.styles,
                   geometries: geometries
                 };
 

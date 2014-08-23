@@ -9,8 +9,8 @@ newCrawlModule.fullUrl = 'http://www.tagadajones.com/new/#/Dates/';
 newCrawlModule.band = new Band();
 newCrawlModule.band.name = 'Tagada Jones';
 newCrawlModule.band.website = 'http://www.tagadajones.com';
-newCrawlModule.band.style.push('Punk');
-newCrawlModule.band.style.push('HardCore');
+
+newCrawlModule.band.styles = [ "Punk hardcore", "Crossover thrash", "Digital hardcore", "Metalcore" ]
 
 // Override the method that assess the web page structure
 newCrawlModule.testDataAcess = function() {

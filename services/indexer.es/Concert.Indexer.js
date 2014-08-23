@@ -20,15 +20,13 @@ ConcertIndexer.prototype.init = function () {
 }
 
 ConcertIndexer.prototype.exists = function (data) {
-  
-
   return this.es_client.search ({
     index: this.index,
     body: {
       query: {
         bool: {
           must: [
-            { match: { 'bandName' : data.bandName }},
+            { match: { 'bandName.exact' : data.bandName }},
             { match: { 'date': data.date }}
           ]
         }

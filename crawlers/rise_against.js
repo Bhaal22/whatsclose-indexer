@@ -10,7 +10,7 @@ rise_against_module.band = new Band();
 rise_against_module.band.name = 'Rise Against';
 rise_against_module.band.website = 'http://www.riseagainst.com/';
 
-rise_against_module.style = ['Melodic hardcore', 'punk rock', 'hardcore punk'];
+rise_against_module.band.styles = ['Melodic hardcore', 'punk rock', 'hardcore punk'];
 
 // Override the method that assess the web page structure
 rise_against_module.testDataAcess = function() {
