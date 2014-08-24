@@ -3,6 +3,7 @@ var Concert = function () {
   this.bandName; 
   this.date;
   this.location;
+  this.venue = '';
   this.geometry = { };
   this.styles = [];
 };
