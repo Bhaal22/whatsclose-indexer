@@ -1,5 +1,5 @@
-var Band = require('../model/Band');
-var CrawlerModule = require('../model/CrawlerModule');
+var Band = require('../../model/Band');
+var CrawlerModule = require('../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
@@ -18,36 +18,20 @@ social_distortion_module.testDataAcess = function() {
 };
 
 social_distortion_module.date = function (d) {
-  var regex = /(\d+\/\d+)\s*-\s*(\d+\/\d+)\/(\d+)/;
+  var date_part = d.split(' ')[1];
 
-  var date_return;
-  var match = d.match(regex);
+  var convert = Date.parseExact(date_part, 'MM/dd/yyyy')
+  return convert.toString ('yyyy-MM-dd');
+}
 
-  if (match) {
-    var first = match[1];
-    var last = match[2];
-    var year = match[3];
-    
-    try {
-      date_return = Date.parseExact(first + '/' + year, ['MM/dd/yyyy', 
-                                                         'MM/d/yyyy',
-                                                         'M/dd/yyyy',
-                                                         'M/d/yyyy']);
-    } catch (e) {
-      console.log(e);
-    }
-  } else {
-    try {
-    date_return = Date.parseExact(d, ['MM/dd/yyyy', 
-                                      'MM/d/yyyy',
-                                      'M/dd/yyyy',
-                                      'M/d/yyyy']);
-    } catch(e) {
-      console.log(e);
-    }
-  } 
-
-  return date_return.toString('yyyy-MM-dd');
+social_distortion_module.extract_location_information = function (location) {
+  var regex = /\s+|\t+/g;
+  var trimmed_location = location.replace (regex, ' ').trim();
+  var split_location = trimmed_location.split ('@');
+  return {
+    location: split_location[0].trim(),
+    venue: split_location[1].trim()
+  };
 }
 
 // Override the method that retrieve the events data
@@ -62,14 +46,25 @@ social_distortion_module.processData = function(window) {
 
   var self = this;
 
-  console.log('social_distortion entries: ', rows.length - 1);
-  rows.slice(1).each (function (index) {
-    var infos = $('td', this);
+  console.log('social_distortion entries: ', rows.length);
+  rows.each (function (index) {   
     
-    var date = $(infos[0]).text().trim();
-    var location = $(infos[1]).text().trim();
-    
-    results.push({ date: date, location: location });
+    // console.log(infos);
+    // console.log('-------------------------');
+    // console.log(infos.next().val());
+    var date = $('td > strong', this).text().trim();
+    var location = $('td', this).contents().filter(function () {
+      return this.nodeType == 3;
+    })[0].nodeValue;
+
+        //console.log('****************************');
+    console.log(date);
+    var location_information = self.extract_location_information(location);
+
+    results.push({ date: date, 
+                   location: location_information.location,
+                   venue: location_information.venue
+                 });
   });
 
   return results;
