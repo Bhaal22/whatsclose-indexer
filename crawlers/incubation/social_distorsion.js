@@ -49,15 +49,11 @@ social_distortion_module.processData = function(window) {
   console.log('social_distortion entries: ', rows.length);
   rows.each (function (index) {   
     
-    // console.log(infos);
-    // console.log('-------------------------');
-    // console.log(infos.next().val());
     var date = $('td > strong', this).text().trim();
     var location = $('td', this).contents().filter(function () {
       return this.nodeType == 3;
     })[0].nodeValue;
 
-        //console.log('****************************');
     console.log(date);
     var location_information = self.extract_location_information(location);
 
