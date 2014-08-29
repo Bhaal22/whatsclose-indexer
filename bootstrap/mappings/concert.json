@@ -16,6 +16,7 @@
     "styles" : { "type": "string", "index_name" : "style" },
     "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
     "location" : { "type" : "string" },
+    "venue" : { "type": "string" }
     "geometry" : { "type" : "geo_point"}
   }
 }

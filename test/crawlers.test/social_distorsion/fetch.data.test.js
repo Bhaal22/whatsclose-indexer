@@ -1,7 +1,7 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
-var social_distorsion = require('../../../crawlers/incubation/social_distorsion').crawlModule;
+var social_distorsion = require('../../../crawlers/social_distorsion').crawlModule;
 
 describe('Social Distorsion Suite', function(){
   it('get Social Distorsion Tour generation', function(done){

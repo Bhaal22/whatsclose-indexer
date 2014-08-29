@@ -16,6 +16,7 @@
     "styles" : { "type": "string", "index_name" : "tyle" },
     "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
     "location" : { "type" : "string" },
+    "venue" : { "type": "string" },
     "geometries" : { "type" : "nested", "index_name": "geo",
                      "properties": {
                        "formatted_address" : { "type": "string" },
