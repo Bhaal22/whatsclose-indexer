@@ -54,7 +54,6 @@ social_distortion_module.processData = function(window) {
       return this.nodeType == 3;
     })[0].nodeValue;
 
-    console.log(date);
     var location_information = self.extract_location_information(location);
 
     results.push({ date: date, 
