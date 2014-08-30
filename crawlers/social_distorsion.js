@@ -56,7 +56,7 @@ social_distortion_module.processData = function(window) {
 
     var location_information = self.extract_location_information(location);
 
-    results.push({ date: date, 
+    results.push({ date: self.date(date), 
                    location: location_information.location,
                    venue: location_information.venue
                  });
