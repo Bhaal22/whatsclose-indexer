@@ -1,7 +1,7 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
-var andreas_nicolas = require('../../../crawlers/incubation/andreas_nicolas').crawlModule;
+var andreas_nicolas = require('../../../crawlers/andreas_nicolas').crawlModule;
 
 describe('Andreas et Nicolas Suite', function(){
   it('get Andreas et Nicolas Tour generation', function(done){
