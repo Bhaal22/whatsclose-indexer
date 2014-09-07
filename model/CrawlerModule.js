@@ -70,7 +70,6 @@ CrawlerModule.prototype = {
       // We expect raw objects containing date & location attributes
       var results = currentModule.processData(html);
       for (var i = 0, ii = results.length; i < ii; i++) {
-        //winston.info(currentModule.band.name + 'New event !!!! : ' + results[i].date + ' - ' + results[i].location);
         currentModule.band.addConcertEvent(results[i].date, results[i].location);
       }
       deferred.resolve(currentModule);
