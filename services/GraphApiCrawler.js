@@ -1,8 +1,12 @@
 var fs = require('fs');
-var http = require('http');
+var https= require('https');
 var env = require('jsdom').env;
 var Q = require('q');
+var qs = require('qs');
+var url = require('url');
 var winston = require('./CustomWinston.js');
+
+var fb_config = require(__base + '/config/fb');
 
 // Events
 var eventEmitter = require('./CustomEventEmitter');
@@ -18,29 +22,63 @@ var CrawlService = function() {
   this.access_token = "";
 };
 
-var auth = function () {
-  //https://graph.facebook.com/oauth/access_token?client_id=699899433422062&client_secret=4a9c3c206928726923400b1073c6df56&grant_type=client_credentials
-  
-  var endpoint = {
-    hostname: 'www.google.com',
-    port: 443,
-    path: '/oauth/access_token',
-    method: 'GET' };
-  
-  var request = http.request(options, function(res) {
-    
-    var data = '';
+CrawlService.prototype.auth = function () {
+
+  var httpGet = function (opts) {
+    var deferred = Q.defer();
+    https.get(opts, deferred.resolve);
+
+    return deferred.promise;
+  };
+
+  var fb_response = function (res) {
+    var deferred = Q.defer();
+
+    var body = '';
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      data += chunk
+      body += chunk
+    });
+    
+    res.on('end', function (res) {
+      console.log(body);
+
+      var json = typeof body === 'string' ? null : body
+      , err = null;
+      if (!json) {
+        try {
+          if (~body.indexOf('{') && ~body.indexOf('}')) {
+            json = JSON.parse(body);
+          } else {
+
+            if (!~body.indexOf('=')) body = 'data=' + body;
+            if (body.charAt(0) !== '?') body = '?' + body;
+
+            json = url.parse(body, true).query;
+          }
+        } catch (e) {
+          err = {
+            message: 'Error parsing json'
+            , exception: e
+          };
+        }
+      }
     });
 
-    res.on('end', function () {
-      console.log (data);
-    });
+    return deferred.promise;
+  }
+  
+  var path = qs.stringify(fb_config);
+  var endpoint = {
+    hostname: 'graph.facebook.com',
+    port: 443,
+    path: '/oauth/access_token?' + path,
+    method: 'GET' };
+  
+  return httpGet(endpoint).then(function (res) {
+    fb_response (res);
   });
-
-};
+}
 
 CrawlService.prototype.init = function() {
 	var self = this;
