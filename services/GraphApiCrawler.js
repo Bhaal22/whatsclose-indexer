@@ -23,6 +23,7 @@ var CrawlService = function() {
 };
 
 CrawlService.prototype.auth = function () {
+  var self = this;
 
   var httpGet = function (opts) {
     var deferred = Q.defer();
@@ -41,10 +42,8 @@ CrawlService.prototype.auth = function () {
     });
     
     res.on('end', function (res) {
-      console.log(body);
 
-      var json = typeof body === 'string' ? null : body
-      , err = null;
+      var json = typeof body === 'string' ? null : body, err = null;
       if (!json) {
         try {
           if (~body.indexOf('{') && ~body.indexOf('}')) {
@@ -55,16 +54,19 @@ CrawlService.prototype.auth = function () {
             if (body.charAt(0) !== '?') body = '?' + body;
 
             json = url.parse(body, true).query;
+            self.access_token = json.access_token;
+
+            deferred.resolve();
           }
         } catch (e) {
           err = {
-            message: 'Error parsing json'
-            , exception: e
+            message: 'Error parsing json', 
+            exception: e
           };
         }
       }
     });
-
+    
     return deferred.promise;
   }
   
@@ -76,36 +78,36 @@ CrawlService.prototype.auth = function () {
     method: 'GET' };
   
   return httpGet(endpoint).then(function (res) {
-    fb_response (res);
+    return fb_response (res);
   });
 }
 
 CrawlService.prototype.init = function() {
 	var self = this;
 
-  auth ();
-  
-	var crawlersDir = fs.readdirSync('./crawlers/graphApi');
-
-	for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
-    var band_file_name = crawlersDir[i];
-    var regex = /.js$/;
-
-    var match = band_file_name.match(regex);
-
-    if (match) {
-
-		  winston.info('Crawler file found : ' + band_file_name);
-		  // Load the js files as node modules
-		  var module = require('../crawlers/graphApi'
-				                   + band_file_name.replace(/.js$/, ""));
-		  this.crawl_modules.push(module);
-    }
-	};
-	
-	eventEmitter.on(CRAWL_DATA_EVENT, function() {
-		self.crawlData();
-	});
+  this.auth ().then (function(data) {
+    var crawlersDir = fs.readdirSync('./crawlers/graphApi');
+    
+	  for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
+      var band_file_name = crawlersDir[i];
+      var regex = /.js$/;
+      
+      var match = band_file_name.match(regex);
+      
+      if (match) {
+        
+		    winston.info('Crawler file found : ' + band_file_name);
+		    // Load the js files as node modules
+		    var module = require('../crawlers/graphApi'
+				                     + band_file_name.replace(/.js$/, ""));
+		    this.crawl_modules.push(module);
+      }
+	  };
+	  
+	  eventEmitter.on(CRAWL_DATA_EVENT, function() {
+		  self.crawlData();
+	  });
+  });
 };
 
 CrawlService.prototype.crawlData = function() {
