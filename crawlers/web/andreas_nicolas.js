@@ -1,5 +1,5 @@
-var Band = require('../model/Band');
-var CrawlerModule = require('../model/CrawlerModule');
+var Band = require('../../model/Band');
+var CrawlerModule = require('../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 

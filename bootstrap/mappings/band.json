@@ -1,4 +1,4 @@
-"bane" : {
+"band" : {
   "name" : { "type" : "string" },
   "website" : { "type" : "string" },
   "styles" : { "type" : "string", "index_name" : "style" }
