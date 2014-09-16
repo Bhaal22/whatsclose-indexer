@@ -1,18 +1,27 @@
-var root_indexer = require("./Indexer.js").I;
-var winston = require('../CustomWinston.js');
-var eventEmitter = require('../CustomEventEmitter');
 var Q = require('q');
 
+var root_indexer = require(__base + 'services/indexing/indexer.es/Indexer.js').I;
+var winston = require(__base + 'services/CustomWinston.js');
+var eventEmitter = require(__base + 'services/CustomEventEmitter');
+
+
+/** listened events **/
+var GEOCODE_MULTIPLE = 'geocode_multiple';
+
+/** fired events **/
+
+/** attributes **/
 function MultipleConcertIndexer () {
   this.type = 'multiple.concert';
 }
 
 MultipleConcertIndexer.prototype = new root_indexer();
 
+/** methods **/
 MultipleConcertIndexer.prototype.init = function () {
   var self = this;
 	
-	eventEmitter.on("geocode_multiple", function(crawledModule) {
+	eventEmitter.on(GEOCODE_MULTIPLE, function(crawledModule) {
 	  self.publish(crawledModule);
 	});
 }

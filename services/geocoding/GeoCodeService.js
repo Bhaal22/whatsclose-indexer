@@ -1,21 +1,41 @@
-var eventEmitter = require('./CustomEventEmitter');
+// TO REFACTOR
+
 var Q = require('q');
 var geocoder = require('geocoder');
 var sleep = require('sleep');
-var winston = require('./CustomWinston.js');
 
-function GeoCoderService () {
-  var outgoing_events = [ 'geocode_ok', 'geocode_multiple', 'geocode_error' ];
-  var incoming_events = [ 'crawled' ];
-  this.moduleName = "GeoCoderService";
+var eventEmitter = require(__base + 'services/CustomEventEmitter');
+var winston = require(__base + 'services/CustomWinston.js');
+
+
+/** listened events **/
+var CRAWLED_EVENT = 'crawled';
+
+/** fired events **/
+var GEOCODE_OK = 'geocode_ok';
+var GEOCODE_MULTIPLE = 'geocode_multiple';
+var GEOCODE_ERROR = 'geocode_error';
+
+/** attributes **/
+function GeoCoderService(name) {
+
+
+
+}
+
+/** methods **/
+GeoCoderService.prototype = {
   
-  this.init = function () {
+  /**
+   * TODO
+   * @return {void}
+   */
+  init: function () {
 	  var self = this;
-	  eventEmitter.on("crawled", function(crawledModule) {
+	  eventEmitter.on(CRAWLED_EVENT, function(crawledModule) {
       winston.info ("starting geocoding ...");
 		  if (crawledModule) {
 			  var concertsList = crawledModule.band.concerts;
-
 
         concertsList.forEach (function (concert) {
           self.searchGeometry(concert).then (function (data) {
@@ -26,7 +46,7 @@ function GeoCoderService () {
                 lat: geometry.location.lat,
                 lon: geometry.location.lng 
               };
-        	    eventEmitter.emit("geocode_ok", concert);
+        	    eventEmitter.emit(GEOCODE_OK, concert);
             }
             else {
               var location = concert.location;
@@ -51,7 +71,7 @@ function GeoCoderService () {
                   geometries: geometries
                 };
 
-                eventEmitter.emit("geocode_multiple", send);
+                eventEmitter.emit(GEOCODE_MULTIPLE, send);
               } catch (e) {
                 console.log (e);
                 console.log(e.stack);
@@ -61,14 +81,19 @@ function GeoCoderService () {
           }).fail (function (error) {
             winston.error("error getting geometry");
 	          console.log (error.stack);
-            eventEmitter.emit ("geocode_error", error);
+            eventEmitter.emit (GEOCODE_ERROR, error);
           });
         });
 		  }
 	  });
   },
 
-  this.searchGeometry = function (concert) {
+  /**
+   * TODO
+   * @param  {[type]} concert TODO
+   * @return {void}
+   */
+  searchGeometry: function (concert) {
     var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
     var location = concert.location;
 
@@ -93,10 +118,8 @@ function GeoCoderService () {
     }).fail (function (err) {
       console.log (err);
     });
-  };
+  }
 };
-
-
 
 module.exports = new GeoCoderService();
 

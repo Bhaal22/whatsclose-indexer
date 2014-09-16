@@ -1,7 +1,13 @@
-var root_indexer = require("./Indexer.js");
-var winston = require('../CustomWinston');
-var eventEmitter = require('../CustomEventEmitter');
 var Q = require('q');
+
+var root_indexer = require(__base + 'services/indexing/indexer.es/Indexer.js');
+var winston = require(__base + 'services/CustomWinston');
+var eventEmitter = require(__base + 'services/CustomEventEmitter');
+
+/** listened events **/
+var GEOCODE_OK = 'geocode_ok';
+
+/** fired events **/
 
 function ConcertIndexer () {
   this.type = 'concert';
@@ -11,10 +17,10 @@ ConcertIndexer.prototype = new root_indexer.I();
 
 ConcertIndexer.prototype.init = function () {
   var self = this;
-  console.log('init Concert.indexer');
+  winston.info('init Concert.indexer');
 	
-	eventEmitter.on("geocode_ok", function(crawledModule) {
-    winston.log ('publishing concert ...');
+	eventEmitter.on(GEOCODE_OK, function(crawledModule) {
+    winston.info ('publishing concert ...');
 		self.publish(crawledModule);
 	});
 }
