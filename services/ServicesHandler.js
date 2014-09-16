@@ -1,30 +1,46 @@
-var crawlService = require(__base + 'services/crawling/CrawlService');
-var geoCodeService = require(__base + 'services/geocoding/GeoCodeService');
-var indexService = require(__base + 'services/indexing/IndexService');
+var fs = require('fs');
+var path = require('path');
 
-/** listened events **/
+var winston = require ('./CustomWinston');
 
-/** fired events **/
+//Events
+var eventEmitter = require('./CustomEventEmitter');
 
-/** attributes **/
-function ServicesHandler(name) {
 
-  
+// attributes
+var ServicesHandler = function () {
+	this.services = [];
+};
 
-}
-
-/** methods **/
+// methods
 ServicesHandler.prototype = {
   
-   init: function () {
-    
-    // Avoid dynamic module loading when unnecessary
-    // Here manual loading is straightforward
-    crawlService.init();
-    geoCodeService.init();
-    indexService.init();
+  init: function() {
+	  
+  	// retrieve the crawlers js files
+  	var servicesDir = fs.readdirSync('services');
+  	for (var i = 0, ii = servicesDir.length; i < ii; i++) {
+      var file_name = servicesDir[i];
+      var regex = /.js$/;
 
+      var match = file_name.match(regex);
+      
+
+  	  if ((servicesDir[i] != path.basename (__filename)) && (match)) {
+  	    winston.info('service file found : ' + file_name);
+  	    
+  	    // Load the js files as node modules
+  	    var module = require('./' + file_name.replace(/.js$/, ""));
+        
+        try {
+          module.init ();
+          this.services[module.moduleName] = module;
+        } catch (e) {
+          console.trace (e);
+        }
+      }
+  	};
   }
 };
 
-module.exports = new ServicesHandler();
+module.exports = new ServicesHandler ();
