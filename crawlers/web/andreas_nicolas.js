@@ -1,5 +1,5 @@
-var Band = require('../model/Band');
-var CrawlerModule = require('../model/CrawlerModule');
+var Band = require(__base + 'model/Band');
+var CrawlerModule = require(__base + 'model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
@@ -13,14 +13,26 @@ band_module.band.website = 'http://www.andreasetnicolas.com';
 band_module.band.styles = ['Punk rock', 'Monkey punk'];
 
 // Override the method that assess the web page structure
-band_module.testDataAcess = function() {
-  return true;
-};
+band_module.testDataAcess = function(window) {
+  var $ = require('jquery')(window);
+  
+  // tests on the page
+  var tests = [
+    {
+      elt: $('img.header_logo').attr('alt'),
+      nullable: false,
+      expectedValue: 'Andréas & Nicolas.com'
+    },
+    {
+      elt: $('div#showslist').length,
+      nullable: false,
+      expectedValue: 1
+    }
+  ]
 
-band_module.date = function (d) {
-  var convert = Date.parseExact(d, 'dd.MM.yy')
-  return convert.toString ('yyyy-MM-dd');
-}
+  return this.testDomElements(tests);
+
+};
 
 // Override the method that retrieve the events data
 band_module.processData = function(window) {
@@ -48,6 +60,11 @@ band_module.processData = function(window) {
   return results;
 };
 
+
+band_module.date = function (d) {
+  var convert = Date.parseExact(d, 'dd.MM.yy')
+  return convert.toString ('yyyy-MM-dd');
+}
 
 module.exports = {
   crawlModule: band_module

@@ -12,7 +12,7 @@ var CRAWL_DATA_EVENT = 'crawlData';
 var CRAWLED_EVENT = 'crawled';
 
 /** attributes **/
-function CrawlService(name) {
+function CrawlService() {
 
   this.crawl_modules = [];
 
@@ -58,35 +58,42 @@ CrawlService.prototype = {
    * @return {void}
    */
   crawlData: function() {
+    var self = this;
     var promises = [];
-    // Parse every crawling module and call the testDataAcess & crawlWebData functions
-    var process = function(crawlModule) {
-      var band = crawlModule.band;
 
-      if (crawlModule.isValid()) {
-
-        winston.warn('Start processing module : ' + band.name);
-        // check if the page web is still well defined
-        var isPageOK = crawlModule.testDataAcess();
-        if (isPageOK) {
-          winston.info('fullUrl : ' + crawlModule.fullUrl);
-          return crawlModule.crawlWebData();
-        }
-      }
-    };
 
     this.crawl_modules.forEach(function(module) {
-      var p = process(module.crawlModule);
+      
+      var p = self._process(module.crawlModule);
 
       p.then(function(crawlModule) {
-        // Fire event "crawled"
-        eventEmitter.emit(CRAWLED_EVENT, crawlModule);
+        if (crawlModule.band.concerts.length){
+          // Fire event "crawled"
+          eventEmitter.emit(CRAWLED_EVENT, crawlModule);
+        }
       });
 
       promises.push(p);
     });
 
     return Q.all(promises);
+  },
+
+  /**
+   * Parse every crawling module and call the testDataAcess & crawlWebData functions
+   * @param  {[type]} crawlModule [description]
+   * @return {[type]}             [description]
+   */
+  _process: function(crawlModule) {
+    var band = crawlModule.band;
+
+    if (crawlModule.isValid()) {
+
+      winston.warn('Start processing module : ' + band.name);
+      winston.info('fullUrl : ' + crawlModule.fullUrl);
+      
+      return crawlModule.crawlWebData();
+    }
   }
 
 };

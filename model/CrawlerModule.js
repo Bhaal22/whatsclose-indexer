@@ -36,14 +36,13 @@ CrawlerModule.prototype = {
   // #06 : index that f***ing shit !!!
 
   crawlWebData: function() {
-  
     // #B : Promises refactor
     var currentModule = this;
 
     // Bind defer on http.get callback function
     var httpGet = function (opts) {
       var deferred = Q.defer();
-      http.get(opts, deferred.resolve);
+      http.get(opts, deferred.resolve).on('error', deferred.reject);
       return deferred.promise;
     };
 
@@ -67,21 +66,29 @@ CrawlerModule.prototype = {
     var extractData = function (html){
       var deferred = Q.defer();
       
-      // We expect raw objects containing date & location attributes
-      var results = currentModule.processData(html);
-      for (var i = 0, ii = results.length; i < ii; i++) {
-        currentModule.band.addConcertEvent(results[i].date, results[i].location);
+      var isPageOK = currentModule.testDataAcess(html);
+      if (isPageOK){
+        // We expect raw objects containing date & location attributes
+        var results = currentModule.processData(html);
+        for (var i = 0, ii = results.length; i < ii; i++) {
+          currentModule.band.addConcertEvent(results[i].date, results[i].location);
+        }
       }
+      else{
+        winston.error('The web page contains errors, we can\'t crawl it !!!');
+      }
+
       deferred.resolve(currentModule);
       return deferred.promise;
     }
 
     // Defered chaining
+    
     return httpGet(currentModule.fullUrl).then(function (res){
       
       return loadBody(res);
       
-    }).then(function (webData) {
+    }, currentModule.httpGetError).then(function (webData) {
       
       return envPromise(webData);
 
@@ -89,8 +96,37 @@ CrawlerModule.prototype = {
       
       return extractData(window);
 
-    });
+    }, currentModule.envError);
 
+  },
+
+  /**
+   * [testDomElements description]
+   * @param  { [{elt,nullable,expectedValue},...] } tests DOM elements to tests and their expected behaviour
+   * @return {boolean}
+   */
+  testDomElements: function(tests){
+    var isPageOK = true;
+    for (var i = tests.length - 1; i >= 0; i--) {
+      var currentElement = tests[i].elt;
+      var isNullable = tests[i].nullable;
+      var expectedValue = tests[i].expectedValue;
+
+
+      if (!isNullable && (currentElement === undefined || currentElement === null))
+        isPageOK = false;
+      if (expectedValue && currentElement !== expectedValue)
+        isPageOK = false;
+    };
+    return isPageOK;
+  },
+
+  httpGetError: function(error){
+    winston.error('HTTP GET error while processing the crawl module');
+  },
+
+  envError: function(error){
+    winston.error('JSDOM ENV error while processing the crawl module');
   }
 }
 
