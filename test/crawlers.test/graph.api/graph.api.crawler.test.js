@@ -3,7 +3,7 @@ var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../';
 
-var service = require('../../../services/GraphApiCrawler');
+var service = require(global.__base + 'services/crawling/GraphApiCrawler');
 
 describe('Graph Api Access Token Suite', function(){
   it('Get Whatsclose Access Token', function(done){

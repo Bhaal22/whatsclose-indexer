@@ -4,12 +4,12 @@ var env = require('jsdom').env;
 var Q = require('q');
 var qs = require('qs');
 var url = require('url');
-var winston = require('./CustomWinston.js');
+var winston = require('../CustomWinston.js');
 
 var fb_config = require(__base + '/config/fb');
 
 // Events
-var eventEmitter = require('./CustomEventEmitter');
+var eventEmitter = require('../CustomEventEmitter');
 
 var CRAWL_DATA_EVENT = "crawlData";
 var CRAWLED_EVENT = "crawled";
