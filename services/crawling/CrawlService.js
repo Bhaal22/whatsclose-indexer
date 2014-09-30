@@ -10,6 +10,7 @@ var CRAWL_DATA_EVENT = 'crawlData';
 
 /** fired events **/
 var CRAWLED_EVENT = 'crawled';
+var CRAWLING_BAND = 'crawling_band';
 
 /** attributes **/
 function CrawlService() {
@@ -87,6 +88,7 @@ CrawlService.prototype = {
   _process: function(crawlModule) {
     var band = crawlModule.band;
 
+    eventEmitter.emit(CRAWLING_BAND, band);
     if (crawlModule.isValid()) {
 
       winston.warn('Start processing module : ' + band.name);
