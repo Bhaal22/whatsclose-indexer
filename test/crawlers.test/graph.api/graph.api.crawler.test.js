@@ -1,6 +1,8 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
+var q = require('Q');
+
 global.__base = __dirname + '/../../../';
 
 var service = require(global.__base + 'services/crawling/GraphApiCrawler');
@@ -18,12 +20,12 @@ describe('Graph Api Access Token Suite', function(){
 
   it('Get Whatsclose Access Token', function(done){
     
-    service.init();
+    service.init().then (function (data) {
+      console.log(service.access_token);
       
-    console.log(service.access_token);
-    expect(service.crawl_modules).to.not.be.empty();
-
-
-    done();
+      expect(service.crawl_modules).to.not.be.empty();
+    
+      done();
+    });
   });
 });

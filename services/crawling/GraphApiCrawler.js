@@ -85,11 +85,13 @@ CrawlService.prototype.auth = function () {
 CrawlService.prototype.init = function() {
 	var self = this;
 
+  var deferred = Q.defer();
   this.auth ().then (function(data) {
-    var crawlersDir = fs.readdirSync('./crawlers/graphApi');
-    
+    var crawlersDir = fs.readdirSync(__base + '/crawlers/graphApi');
+   
 	  for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
       var band_file_name = crawlersDir[i];
+
       var regex = /.js$/;
       
       var match = band_file_name.match(regex);
@@ -98,16 +100,16 @@ CrawlService.prototype.init = function() {
         
 		    winston.info('Crawler file found : ' + band_file_name);
 		    // Load the js files as node modules
-		    var module = require('../crawlers/graphApi'
+		    var module = require(__base + '/crawlers/graphApi'
 				                     + band_file_name.replace(/.js$/, ""));
 		    this.crawl_modules.push(module);
       }
 	  };
-	  
-	  eventEmitter.on(CRAWL_DATA_EVENT, function() {
-		  self.crawlData();
-	  });
+
+    deferred.resolve();
   });
+
+  return deferred.promise;
 };
 
 CrawlService.prototype.crawlData = function() {
