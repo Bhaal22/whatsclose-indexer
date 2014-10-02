@@ -18,18 +18,27 @@ var GEOCODE_ERROR = 'geocode_error';
 
 /** attributes **/
 function GeoCoderService(name) {
-
-
-
 }
 
 /** methods **/
 GeoCoderService.prototype = {
-  
-  /**
-   * TODO
-   * @return {void}
-   */
+  filter_locations: function(locations) {
+    
+    var address_component_is_city = function (element, index, array) {
+      return element.types.arrayOf("locality") != -1;
+    };
+   
+
+    return locations.find (function(element, index, array) {
+      return true;
+      console.log('-------------');
+      console.log(element);
+      console.log('-------------');
+
+      return elements.address_components.find(address_components) != -1;
+    });
+  },
+
   init: function () {
 	  var self = this;
 	  eventEmitter.on(CRAWLED_EVENT, function(crawledModule) {
