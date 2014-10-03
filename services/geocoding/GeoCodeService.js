@@ -20,22 +20,41 @@ var GEOCODE_ERROR = 'geocode_error';
 function GeoCoderService(name) {
 }
 
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this == null) {
+      throw new TypeError('Array.prototype.find called on null or undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate must be a function');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+    
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+
 /** methods **/
 GeoCoderService.prototype = {
   filter_locations: function(locations) {
     
     var address_component_is_city = function (element, index, array) {
-      return element.types.arrayOf("locality") != -1;
+      var ret = element.types.indexOf('locality');
+      return ret != -1;
     };
-   
 
-    return locations.find (function(element, index, array) {
-      return true;
-      console.log('-------------');
-      console.log(element);
-      console.log('-------------');
-
-      return elements.address_components.find(address_components) != -1;
+    return locations.filter (function(element) {
+      var comp = element.address_components.find(address_component_is_city);
+      return (comp != undefined);
     });
   },
 
@@ -58,6 +77,7 @@ GeoCoderService.prototype = {
         	    eventEmitter.emit(GEOCODE_OK, concert);
             }
             else {
+//              var filtered_cities = self.filter_locations(data.results);
               var location = concert.location;
               winston.warn ("multiple geometries for location %s %d", location, data.results.length);
               try {
