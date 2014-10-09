@@ -21,3 +21,15 @@ POST _snapshot/backup_ws_1/ws_1/_restore
   "rename_replacement": "whatsclose.dev"
   
 }
+
+POST /_aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "whatsclose.dev",
+        "alias": "whatsclose"
+      }
+    }
+  ]
+}
