@@ -49,12 +49,20 @@ GeoCoderService.prototype = {
     
     var address_component_is_city = function (element, index, array) {
       var ret = element.types.indexOf('locality');
+     
+      // if (ret != -1) {
+      //   console.log('---------------------');
+      //   console.dir(element);
+      //   console.log('---------------------');
+      // }
       return ret != -1;
     };
 
     return locations.filter (function(element) {
-      var comp = element.address_components.find(address_component_is_city);
-      return (comp != undefined);
+      //var comp = element.find(address_component_is_city);
+      //return (comp != undefined);
+
+      return address_component_is_city(element);
     });
   },
 
@@ -77,33 +85,47 @@ GeoCoderService.prototype = {
         	    eventEmitter.emit(GEOCODE_OK, concert);
             }
             else {
-//              var filtered_cities = self.filter_locations(data.results);
-              var location = concert.location;
-              winston.warn ("multiple geometries for location %s %d", location, data.results.length);
-              try {
-                var geometries = data.results.map (function (geometry) {
+              var filtered_cities = self.filter_locations(data.results);
+
+              if (filtered_cities.length > 1) {
+
+                var location = concert.location;
+                winston.warn ("multiple geometries for location %s %d", location, filtered_cities.length);
+                try {
+                  var geometries = data.results.map (function (geometry) {
+                    
+                    var conv = {
+                      formatted_address: geometry.formatted_address,
+                      lat: geometry.geometry.location.lat,
+                      lon: geometry.geometry.location.lng
+                    };
+                    
+                    return conv;
+                  });
                   
-                  var conv = {
-                    formatted_address: geometry.formatted_address,
-                    lat: geometry.geometry.location.lat,
-                    lon: geometry.geometry.location.lng
+                  var send = {
+                    bandName: concert.bandName,
+                    date: concert.date,
+                    location: concert.location,
+                    styles: concert.styles,
+                    geometries: geometries
                   };
                   
-                  return conv;
-                });
-
-                var send = {
-                  bandName: concert.bandName,
-                  date: concert.date,
-                  location: concert.location,
-                  styles: concert.styles,
-                  geometries: geometries
+                  eventEmitter.emit(GEOCODE_MULTIPLE, send);
+                }
+                catch (e) {
+                  console.log (e);
+                  console.log(e.stack);
+                }
+              }
+              else {
+                var geometry = filtered_cities[0].geometry;
+                
+                concert.geometry = {
+                  lat: geometry.location.lat,
+                  lon: geometry.location.lng 
                 };
-
-                eventEmitter.emit(GEOCODE_MULTIPLE, send);
-              } catch (e) {
-                console.log (e);
-                console.log(e.stack);
+        	      eventEmitter.emit(GEOCODE_OK, concert);
               }
             }
             

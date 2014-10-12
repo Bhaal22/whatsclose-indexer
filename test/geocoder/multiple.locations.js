@@ -35,6 +35,34 @@ describe('Multiple locations suite', function(){
     });
   }); 
 
+  it('Amsterdam geocoding multiple', function(done) {
+
+    var concert = { 
+      location: "AMSTERDAM"
+    };
+    geocode_svc.searchGeometry(concert).then (function (data) {
+
+      var idx = geocode_svc.filter_locations(data.results);
+      expect(idx.length).eql(2);
+      done();
+    });
+  }); 
+  
+  it('Saint Casimir geocoding multiple', function(done) {
+
+    var concert = { 
+      location: "ST CASIMIR"
+    };
+    geocode_svc.searchGeometry(concert).then (function (data) {
+
+      // console.dir(data.results);
+      // console.log(data.results.length);
+      var idx = geocode_svc.filter_locations(data.results);
+      expect(idx.length).eql(1);
+      done();
+    });
+  }); 
+
   it('Las Vegas geocoding multiple', function(done) {
 
     var concert = { 

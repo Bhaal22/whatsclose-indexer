@@ -36,7 +36,7 @@ newCrawlModule.processData = function(window) {
 		var location = fullLocation.split ('\n')[2].trim ();
 		var dateElements = date.split ("/");
 		
-		results.push({date: new Date (dateElements[2], dateElements[1], dateElements[0]).toString('yyyy-MM-dd'), location: location});
+		results.push({date: new Date (dateElements[2], dateElements[1]-1, dateElements[0]).toString('yyyy-MM-dd'), location: location});
 
   });
 
