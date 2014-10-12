@@ -3,9 +3,10 @@ var CrawlerModule = require('../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
+var jquery = require('jquery');
 
 var _module = new CrawlerModule();
-_module.fullUrl = 'http://http://tour.sabaton.net/';
+_module.fullUrl = 'http://tour.sabaton.net/';
 _module.band = new Band();
 _module.band.name = 'Sabaton';
 _module.band.website = 'http://www.sabaton.net/';
@@ -21,7 +22,9 @@ _module.testDataAcess = function() {
 _module.date = function (d) {
   var date_return;
   try {
-    date_return = Date.parseExact(d, ['yyyy-MM-dd']);
+    var pair = d.split(/T/);
+
+    date_return = Date.parseExact(pair[0], ['yyyy-MM-dd']);
   } catch(e) {
     console.log(e);
   }
@@ -30,24 +33,31 @@ _module.date = function (d) {
 
 // Override the method that retrieve the events data
 _module.processData = function(window) {
-  winston.info('dropkick processDate');
-
-  var $ = require('jquery')(window);
+  winston.info('sabaton processDate');
   
+  var $ = jquery(window);
+
   var results = [];
-  var rows = $ ('.events-table > table > tr');
+  var rows = $ ('.row-wrapper');
 
   var self = this;
 
   console.log('sabaton entries: ', rows.length - 1);
   rows.slice(1).each (function (index) {
-    var infos = $('td', this);
-    
-    var date = $('td.date > meta', this).attr('content');
-    var venue = $(infos[1]).text().trim();
-    var location = $(infos[2]).text().trim();
 
-    results.push({ date: self.date (date), venue: venue, location: location });
+    var parent_id = $(this).parent().attr('id');
+
+    var regex = /concert-\d+$/;
+    var match = parent_id.match(regex);
+
+    if (match) {
+
+      var date = $('div.table-date > time > meta', this).attr('content');
+      var venue = $('div.table-venue', this).text();
+      var location = $('div.table-city', this).text();
+
+      results.push({ date: self.date(date), venue: venue, location: location });
+    }
   });
 
   return results;

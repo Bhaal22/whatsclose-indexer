@@ -3,7 +3,7 @@ var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../../';
 
-var band = require(__base + 'crawlers/web/incubation/sabaton').crawlModule;
+var band = require(__base + 'crawlers/web/sabaton').crawlModule;
 
 describe('Sabaton Suite', function(){
   it('get Sabaton Tour generation', function(done) {
