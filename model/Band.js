@@ -16,8 +16,9 @@ Band.prototype = {
 	  return 'Band:' + this.name;
 	},
 
-	addConcertEvent: function (date, location) {
+	addConcertEvent: function (date, location, venue) {
 		var event = new Concert();
+    event.venue = venue;
 		event.date = date;
   	event.location = location;
 		

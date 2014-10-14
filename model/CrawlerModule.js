@@ -71,7 +71,7 @@ CrawlerModule.prototype = {
         // We expect raw objects containing date & location attributes
         var results = currentModule.processData(html);
         for (var i = 0, ii = results.length; i < ii; i++) {
-          currentModule.band.addConcertEvent(results[i].date, results[i].location);
+          currentModule.band.addConcertEvent(results[i].date, results[i].location, results[i].venue);
         }
       }
       else{
