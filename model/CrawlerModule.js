@@ -112,7 +112,6 @@ CrawlerModule.prototype = {
       var isNullable = tests[i].nullable;
       var expectedValue = tests[i].expectedValue;
 
-
       if (!isNullable && (currentElement === undefined || currentElement === null))
         isPageOK = false;
       if (expectedValue && currentElement !== expectedValue)

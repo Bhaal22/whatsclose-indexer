@@ -49,21 +49,16 @@ GeoCoderService.prototype = {
     
     var address_component_is_city = function (element, index, array) {
       var ret = element.types.indexOf('locality');
-     
-      // if (ret != -1) {
-      //   console.log('---------------------');
-      //   console.dir(element);
-      //   console.log('---------------------');
-      // }
       return ret != -1;
     };
 
-    return locations.filter (function(element) {
-      //var comp = element.find(address_component_is_city);
-      //return (comp != undefined);
-
+    var ret = locations.filter (function(element) {
       return address_component_is_city(element);
     });
+
+    if (ret.length === 0) 
+      return locations;
+    return ret;
   },
 
   init: function () {
@@ -86,7 +81,7 @@ GeoCoderService.prototype = {
             }
             else {
               var filtered_cities = self.filter_locations(data.results);
-
+              
               if (filtered_cities.length > 1) {
 
                 var location = concert.location;
@@ -118,12 +113,12 @@ GeoCoderService.prototype = {
                   console.log(e.stack);
                 }
               }
-              else {
+              else if (filtered_cities.lenght == 1) {
                 var geometry = filtered_cities[0].geometry;
                 
                 concert.geometry = {
                   lat: geometry.location.lat,
-                  lon: geometry.location.lng 
+                  lon: geometry.location.lng
                 };
         	      eventEmitter.emit(GEOCODE_OK, concert);
               }
@@ -131,6 +126,7 @@ GeoCoderService.prototype = {
             
           }).fail (function (error) {
             winston.error("error getting geometry");
+            console.log(concert.location);
 	          console.log (error.stack);
             eventEmitter.emit (GEOCODE_ERROR, error);
           });

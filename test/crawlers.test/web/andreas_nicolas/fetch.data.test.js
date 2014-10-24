@@ -1,7 +1,9 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
-var andreas_nicolas = require('../../../crawlers/andreas_nicolas').crawlModule;
+global.__base = __dirname + '/../../../../';
+
+var andreas_nicolas = require(__base + 'crawlers/web/andreas_nicolas').crawlModule;
 
 describe('Andreas et Nicolas Suite', function(){
   it('get Andreas et Nicolas Tour generation', function(done){
@@ -10,6 +12,9 @@ describe('Andreas et Nicolas Suite', function(){
       then (function (data) {
        
         var concerts = andreas_nicolas.band.concerts;
+
+        console.log(concerts);
+
         expect(concerts).to.not.be.empty();
 
         done ();

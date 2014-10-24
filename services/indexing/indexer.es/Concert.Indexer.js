@@ -20,7 +20,7 @@ ConcertIndexer.prototype.init = function () {
   winston.info('init Concert.indexer');
 	
 	eventEmitter.on(GEOCODE_OK, function(crawledModule) {
-    winston.info ('publishing concert for ' + crawledModule.bandName + ' ');
+    winston.info ('publishing concert for ' + crawledModule.bandName + ' ' + crawledModule.location);
 		self.publish(crawledModule);
 	});
 }
