@@ -1,5 +1,5 @@
-var Band = require('../../model/Band');
-var CrawlerModule = require('../../model/CrawlerModule');
+var Band = require('../../../model/Band');
+var CrawlerModule = require('../../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
@@ -11,11 +11,11 @@ _module.band = new Band();
 _module.band.name = 'Arch Enemy';
 _module.band.website = 'http://www.archenemy.net/';
 
-_module.band.styles = ['power metal'];
+_module.band.styles = ['Melodic death metal', 'Death Metal'];
 
 // Override the method that assess the web page structure
 _module.testDataAcess = function() {
-  winston.info('sabaton testDataAcess');
+  winston.info('Arch Enemy testDataAcess');
   return true;
 };
 
@@ -33,33 +33,49 @@ _module.date = function (d) {
 
 // Override the method that retrieve the events data
 _module.processData = function(window) {
-  winston.info('sabaton processDate');
+  winston.info('Arch Enemy processDate');
   
   var $ = jquery(window);
 
   var results = [];
-  var rows = $ ('.row-wrapper');
+  var rows = $ ('span.newsTitle');
 
   var self = this;
+  var idx_shows = -1;
 
-  console.log('sabaton entries: ', rows.length - 1);
-  rows.slice(1).each (function (index) {
-
-    var parent_id = $(this).parent().attr('id');
-
-    var regex = /concert-\d+$/;
-    var match = parent_id.match(regex);
-
-    if (match) {
-
-      var date = $('div.table-date > time > meta', this).attr('content');
-      var venue = $('div.table-venue', this).text();
-      var location = $('div.table-city', this).text();
-
-      results.push({ date: self.date(date), venue: venue, location: location });
+  rows.each(function(idx) {
+    if ($(this).text() == "UPCOMING CONCERTS") {
+      idx_shows = idx;
+      return;
     }
   });
 
+  if (idx_shows != -1) {
+    var root = rows[idx_shows];
+    var shows = $(':empty', root)
+    
+
+    console.log('Arch Enemy entries: ', shows.length);
+    shows.each (function (index) {
+      
+      //console.log($(this));
+      
+      // var parent_id = $(this).parent().attr('id');
+      
+      // var regex = /concert-\d+$/;
+      // var match = parent_id.match(regex);
+      
+      // if (match) {
+      
+      //   var date = $('div.table-date > time > meta', this).attr('content');
+      //   var venue = $('div.table-venue', this).text();
+      //   var location = $('div.table-city', this).text();
+      
+      //   results.push({ date: self.date(date), venue: venue, location: location });
+      // }
+    });
+  }
+  
   return results;
 }
 

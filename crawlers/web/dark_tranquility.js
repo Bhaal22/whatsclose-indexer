@@ -8,23 +8,21 @@ var jquery = require('jquery');
 var _module = new CrawlerModule();
 _module.fullUrl = 'http://www.bandsintown.com/DarkTranquillity/upcoming_events';
 _module.band = new Band();
-_module.band.name = 'Arch Enemy';
-_module.band.website = 'http://www.archenemy.net/';
+_module.band.name = 'Dark Tranquility';
+_module.band.website = 'http://www.darktranquillity.com/';
 
-_module.band.styles = ['power metal'];
+_module.band.styles = ['Melodic death metal', 'Death Metal'];
 
 // Override the method that assess the web page structure
 _module.testDataAcess = function() {
-  winston.info('sabaton testDataAcess');
+  winston.info('Dark Tranquility testDataAcess');
   return true;
 };
 
 _module.date = function (d) {
   var date_return;
   try {
-    var pair = d.split(/T/);
-
-    date_return = Date.parseExact(pair[0], ['yyyy-MM-dd']);
+    date_return = Date.parseExact(d, ['yyyy-MM-dd']);
   } catch(e) {
     console.log(e);
   }
@@ -33,31 +31,24 @@ _module.date = function (d) {
 
 // Override the method that retrieve the events data
 _module.processData = function(window) {
-  winston.info('sabaton processDate');
-  
-  var $ = jquery(window);
+  winston.info('dark tranquility processDate');
 
+  var $ = require('jquery')(window);
+  
   var results = [];
-  var rows = $ ('.row-wrapper');
+  var rows = $ ('.events-table > table > tr');
 
   var self = this;
 
-  console.log('sabaton entries: ', rows.length - 1);
+  console.log('DT entries: ', rows.length - 1);
   rows.slice(1).each (function (index) {
+    var infos = $('td', this);
+    
+    var date = $('td.date > meta', this).attr('content');
+    var venue = $(infos[1]).text().trim();
+    var location = $(infos[2]).text().trim();
 
-    var parent_id = $(this).parent().attr('id');
-
-    var regex = /concert-\d+$/;
-    var match = parent_id.match(regex);
-
-    if (match) {
-
-      var date = $('div.table-date > time > meta', this).attr('content');
-      var venue = $('div.table-venue', this).text();
-      var location = $('div.table-city', this).text();
-
-      results.push({ date: self.date(date), venue: venue, location: location });
-    }
+    results.push({ date: self.date (date), venue: venue, location: location });
   });
 
   return results;
