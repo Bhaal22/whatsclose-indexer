@@ -38,43 +38,34 @@ _module.processData = function(window) {
   var $ = jquery(window);
 
   var results = [];
-  var rows = $ ('span.newsTitle');
+  //var rows = $ ('span.newsTitle:contains("UPCOMING CONCERTS")');
+  var text = $('div.divContentL').text();
 
   var self = this;
-  var idx_shows = -1;
 
-  rows.each(function(idx) {
-    if ($(this).text() == "UPCOMING CONCERTS") {
-      idx_shows = idx;
-      return;
-    }
-  });
+  var rows = text.split(/\n/);
 
-  if (idx_shows != -1) {
-    var root = rows[idx_shows];
-    var shows = $(':empty', root)
+  console.log('Arch Enemy entries: ', rows.length);
+  rows.forEach (function (row) {
     
+    var trim_row = row.trim();
+    console.log(trim_row);
 
-    console.log('Arch Enemy entries: ', shows.length);
-    shows.each (function (index) {
+    var regex = //;
+    // var parent_id = $(this).parent().attr('id');
+    
+    // var regex = /concert-\d+$/;
+    // var match = parent_id.match(regex);
       
-      //console.log($(this));
-      
-      // var parent_id = $(this).parent().attr('id');
-      
-      // var regex = /concert-\d+$/;
-      // var match = parent_id.match(regex);
-      
-      // if (match) {
-      
-      //   var date = $('div.table-date > time > meta', this).attr('content');
-      //   var venue = $('div.table-venue', this).text();
-      //   var location = $('div.table-city', this).text();
-      
-      //   results.push({ date: self.date(date), venue: venue, location: location });
-      // }
-    });
-  }
+    // if (match) {
+    
+    //   var date = $('div.table-date > time > meta', this).attr('content');
+    //   var venue = $('div.table-venue', this).text();
+    //   var location = $('div.table-city', this).text();
+    
+    //   results.push({ date: self.date(date), venue: venue, location: location });
+    // }
+  });
   
   return results;
 }
