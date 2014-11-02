@@ -1,5 +1,5 @@
-var Band = require('../../../model/Band');
-var CrawlerModule = require('../../../model/CrawlerModule');
+var Band = require('../../model/Band');
+var CrawlerModule = require('../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
@@ -22,9 +22,8 @@ _module.testDataAcess = function() {
 _module.date = function (d) {
   var date_return;
   try {
-    var pair = d.split(/T/);
 
-    date_return = Date.parseExact(pair[0], ['yyyy-MM-dd']);
+    date_return = Date.parseExact(d, ['dd.MM.yyyy']);
   } catch(e) {
     console.log(e);
   }
@@ -49,22 +48,18 @@ _module.processData = function(window) {
   rows.forEach (function (row) {
     
     var trim_row = row.trim();
-    console.log(trim_row);
 
-    var regex = //;
-    // var parent_id = $(this).parent().attr('id');
-    
-    // var regex = /concert-\d+$/;
-    // var match = parent_id.match(regex);
-      
-    // if (match) {
-    
-    //   var date = $('div.table-date > time > meta', this).attr('content');
-    //   var venue = $('div.table-venue', this).text();
-    //   var location = $('div.table-city', this).text();
-    
-    //   results.push({ date: self.date(date), venue: venue, location: location });
-    // }
+    //02.11.2014 - Riddel Centre - Regina, SK (Canada) 
+    var regex = /(\d\d\.\d\d\.\d\d\d\d) - ([\w\s]*) - (.*) \|.*/;
+    var match = trim_row.match(regex);
+
+    if (match) { 
+      var date = match[1];
+      var venue = match[2];
+      var location = match[3];
+
+      results.push({ date: self.date(date), venue: venue, location: location });
+    }
   });
   
   return results;
