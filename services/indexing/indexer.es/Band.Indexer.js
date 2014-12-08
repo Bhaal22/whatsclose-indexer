@@ -28,7 +28,6 @@ BandIndexer.prototype.init = function () {
 };
 
 BandIndexer.prototype.update = function (id, band) {
-  console.log(band.last_crawl_date);
   this.es_client.update({
     index: this.index,
     type: this.type,

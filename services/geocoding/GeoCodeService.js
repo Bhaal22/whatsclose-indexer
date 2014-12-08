@@ -81,7 +81,7 @@ GeoCoderService.prototype = {
             }
             else {
               var filtered_cities = self.filter_locations(data.results);
-              
+ 
               if (filtered_cities.length > 1) {
 
                 var location = concert.location;
@@ -113,9 +113,9 @@ GeoCoderService.prototype = {
                   console.log(e.stack);
                 }
               }
-              else if (filtered_cities.lenght == 1) {
+              else if (filtered_cities.length == 1) {
                 var geometry = filtered_cities[0].geometry;
-                
+
                 concert.geometry = {
                   lat: geometry.location.lat,
                   lon: geometry.location.lng
@@ -135,11 +135,6 @@ GeoCoderService.prototype = {
 	  });
   },
 
-  /**
-   * TODO
-   * @param  {[type]} concert TODO
-   * @return {void}
-   */
   searchGeometry: function (concert) {
     var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
     var location = concert.location;

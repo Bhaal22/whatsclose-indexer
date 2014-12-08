@@ -36,7 +36,7 @@ MultipleConcertIndexer.prototype.exists = function (data) {
       query: {
         bool: {
           must: [
-            { match: { 'bandName.exact' : concert.bandName }},
+            { match: { 'bandName' : concert.bandName }},
             { match: { 'date': concert.date }}
           ]
         }

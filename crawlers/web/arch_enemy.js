@@ -6,7 +6,7 @@ require('datejs');
 var jquery = require('jquery');
 
 var _module = new CrawlerModule();
-_module.fullUrl = 'http://archenemy.net/2014/index.php?go=tourdates';
+_module.fullUrl = 'http://www.bandsintown.com/ArchEnemy/upcoming_events';
 _module.band = new Band();
 _module.band.name = 'Arch Enemy';
 _module.band.website = 'http://www.archenemy.net/';
@@ -22,8 +22,7 @@ _module.testDataAcess = function() {
 _module.date = function (d) {
   var date_return;
   try {
-
-    date_return = Date.parseExact(d, ['dd.MM.yyyy']);
+    date_return = Date.parseExact(d, ['yyyy-MM-dd']);
   } catch(e) {
     console.log(e);
   }
@@ -34,32 +33,22 @@ _module.date = function (d) {
 _module.processData = function(window) {
   winston.info('Arch Enemy processDate');
   
-  var $ = jquery(window);
-
+  var $ = require('jquery')(window);
+  
   var results = [];
-  //var rows = $ ('span.newsTitle:contains("UPCOMING CONCERTS")');
-  var text = $('div.divContentL').text();
+  var rows = $ ('.events-table > table > tr');
 
   var self = this;
 
-  var rows = text.split(/\n/);
-
-  console.log('Arch Enemy entries: ', rows.length);
-  rows.forEach (function (row) {
+  console.log('AE entries: ', rows.length - 1);
+  rows.slice(1).each (function (index) {
+    var infos = $('td', this);
     
-    var trim_row = row.trim();
+    var date = $('td.date > meta', this).attr('content');
+    var venue = $(infos[1]).text().trim();
+    var location = $(infos[2]).text().trim();
 
-    //02.11.2014 - Riddel Centre - Regina, SK (Canada) 
-    var regex = /(\d\d\.\d\d\.\d\d\d\d) - ([\w\s]*) - (.*) \|.*/;
-    var match = trim_row.match(regex);
-
-    if (match) { 
-      var date = match[1];
-      var venue = match[2];
-      var location = match[3];
-
-      results.push({ date: self.date(date), venue: venue, location: location });
-    }
+    results.push({ date: self.date (date), venue: venue, location: location });
   });
   
   return results;
