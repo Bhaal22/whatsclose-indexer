@@ -27,10 +27,14 @@ Indexer.prototype = {
   exists: function (data) {
     throw 'Not implemented';
   },
+  
+  update: function (id, data) {
+    /** do nothing **/
+  },
 
   publish: function (data) {
     var self = this;
-    var concert = data;
+    var _data = data;
 
     this.exists (data)
       .catch (function (error) {
@@ -38,14 +42,13 @@ Indexer.prototype = {
         self.es_client.create({
           index: self.index,
           type: self.type,
-          body: concert
+          body: _data
         }, function (err, resp) {
           if (err != undefined)
             console.log ('error %s', err);
-
-          //console.log ('resp %s', resp);
-          //console.log(resp);
         });
+      }).then(function(id) {
+        self.update(id, _data);
       });
   }
 };

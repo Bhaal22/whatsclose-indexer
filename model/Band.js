@@ -1,5 +1,6 @@
 var Concert = require('./Concert');
 var winston = require('winston');
+require('datejs');
 
 // attributes
 var Band = function () {
@@ -7,6 +8,9 @@ var Band = function () {
   this.website;
   this.styles = [];
   this.concerts = [];
+
+  var dt = Date.today();
+  this.last_crawl_date = dt.toString ('yyyy-MM-dd');
 }
 	
 // methods

@@ -5,5 +5,7 @@
     "search_analyzer": "standard" },
 
   "website" : { "type" : "string" },
-  "styles" : { "type" : "string", "index_name" : "style" }
+  "styles" : { "type" : "string", "index_name" : "style" },
+  "last_crawl_date" : { "type": "date", "format" : "YYYY-MM-dd" }
+  
 }
