@@ -13,8 +13,6 @@ describe('Andreas et Nicolas Suite', function(){
        
         var concerts = andreas_nicolas.band.concerts;
 
-        console.log(concerts);
-
         expect(concerts).to.not.be.empty();
 
         done ();
@@ -33,4 +31,22 @@ describe('Andreas et Nicolas Suite', function(){
         done ();
       });
   });
+
+  it('checks Andreas et Nicolas venues', function(done){
+
+    andreas_nicolas.crawlWebData().
+      then (function (data) {
+       
+        var concerts = andreas_nicolas.band.concerts;
+        expect(concerts[0].venue).not.to.be.equal("");
+
+        console.log(concerts[0].location);
+        expect(concerts[0].location).not.to.be.equal("");
+        
+
+        done ();
+      });
+  });
+
+  
 });

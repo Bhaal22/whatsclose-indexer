@@ -42,8 +42,8 @@ band_module.processData = function(window) {
   
   var results = [];
   var dates = $('.show_table > tr > td > span.show_date');
-  var venues = $('.showslist > table > td > span.show_lieu');
-  var locations = $('span.show_lieu ~ span.show_ville');
+  var venues = $('.show_table > tr > td > span.show_lieu');
+  var locations = $('.show_table > tr > td > span.show_lieu ~ span.show_ville');
 
   var self = this;
 
