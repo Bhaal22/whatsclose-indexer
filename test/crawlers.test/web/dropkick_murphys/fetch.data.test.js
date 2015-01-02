@@ -11,6 +11,7 @@ describe('Dropkick Murphys Suite', function(){
     dropkick.crawlWebData().
       then (function (data) {
         var concerts = dropkick.band.concerts;
+	console.log(concerts);
         expect(concerts).to.not.be.empty();
 
         done ();

@@ -14,7 +14,7 @@ rise_against_module.band.styles = ['Melodic hardcore', 'punk rock', 'hardcore pu
 
 // Override the method that assess the web page structure
 rise_against_module.testDataAcess = function() {
-  winston.info('volbeat testDataAcess');
+  winston.info('rise against testDataAcess');
   return true;
 };
 
@@ -69,8 +69,12 @@ rise_against_module.processData = function(window) {
     
     var date = $(infos[0]).text().trim();
     var location = $(infos[1]).text().trim();
+    var venue = $(infos[2]).text().trim();
 
-    results.push({ date: self.date (date), location: location });
+    results.push({ date: self.date (date), 
+		   location: location,
+		   venue: venue
+		 });
   });
 
   return results;
