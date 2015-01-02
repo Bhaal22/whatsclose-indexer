@@ -1,7 +1,8 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
-var social_distorsion = require('../../../crawlers/social_distorsion').crawlModule;
+global.__base = __dirname + '/../../../../';
+var social_distorsion = require(__base + 'crawlers/web/social_distorsion').crawlModule;
 
 describe('Social Distorsion Suite', function(){
   it('get Social Distorsion Tour generation', function(done){
@@ -11,7 +12,7 @@ describe('Social Distorsion Suite', function(){
        
         var concerts = social_distorsion.band.concerts;
         
-        //console.log(concerts);
+        console.log(concerts);
         expect(concerts).to.not.be.empty();
 
         done ();
