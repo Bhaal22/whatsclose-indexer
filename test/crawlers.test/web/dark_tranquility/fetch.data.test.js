@@ -11,6 +11,7 @@ describe('DT Suite', function(){
     dt.crawlWebData().
       then (function (data) {
         var concerts = dt.band.concerts;
+	console.log(concerts);
         expect(concerts).to.not.be.empty();
         done ();
       });
