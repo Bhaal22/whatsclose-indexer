@@ -32,11 +32,15 @@ newCrawlModule.processData = function(window) {
   console.log('tagada jones entries: ', rows.length);
   rows.each (function (index) {
     var date = $('span.DateDate', this).text ();
-		var fullLocation = $(this).text ();
-		var location = fullLocation.split ('\n')[2].trim ();
-		var dateElements = date.split ("/");
+    var fullLocation = $(this).text ();
+    var location = fullLocation.split ('\n')[2].trim ();
+    var venue = fullLocation.split ('\n')[4].trim ();
+    var dateElements = date.split ("/");
 		
-		results.push({date: new Date (dateElements[2], dateElements[1]-1, dateElements[0]).toString('yyyy-MM-dd'), location: location});
+		results.push({date: new Date (dateElements[2], dateElements[1]-1, dateElements[0]).toString('yyyy-MM-dd'), 
+			      location: location,
+			      venue: venue
+			     });
 
   });
 

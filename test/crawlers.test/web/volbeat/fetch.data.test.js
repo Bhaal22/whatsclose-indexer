@@ -1,7 +1,8 @@
 var request = require('superagent');
 var expect = require('expect.js');
 
-var volbeat = require('../../../crawlers/volbeat').crawlModule;
+global.__base = __dirname + '/../../../../';
+var volbeat = require(__base +  'crawlers/web/volbeat').crawlModule;
 
 describe('Volbeat Suite', function(){
   it('get Volbeat Tour generation', function(done){
@@ -10,6 +11,7 @@ describe('Volbeat Suite', function(){
       then (function (data) {
        
         var concerts = volbeat.band.concerts;
+	console.log(concerts);
         expect(concerts).to.not.be.empty();
 
         done ();

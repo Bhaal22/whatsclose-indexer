@@ -11,6 +11,7 @@ describe('Sabaton Suite', function(){
     band.crawlWebData().
       then (function (data) {
         var concerts = band.band.concerts;
+	console.log(concerts);
         expect(concerts).to.not.be.empty();
 
         done ();
