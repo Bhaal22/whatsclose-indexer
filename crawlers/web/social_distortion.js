@@ -7,7 +7,7 @@ require('datejs');
 var social_distortion_module = new CrawlerModule();
 social_distortion_module.fullUrl = 'http://www.socialdistortion.com/tours';
 social_distortion_module.band = new Band();
-social_distortion_module.band.name = 'Social Distorsion';
+social_distortion_module.band.name = 'Social Distortion';
 social_distortion_module.band.website = 'http://www.socialdistortion.com';
 
 social_distortion_module.band.styles = ['Punk rock', 'Alternative rock', 'rockabilly', 'hardcore punk'];
