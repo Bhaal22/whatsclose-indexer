@@ -10,8 +10,9 @@ var CRAWLING_BAND = 'crawling_band';
 /** fired events **/
 
 /** attributes **/
-function BandIndexer() {
+function BandIndexer(client) {
   this.type = 'band';
+  this.es_client = client;
 }
 
 BandIndexer.prototype = new root_indexer.I();

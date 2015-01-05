@@ -9,13 +9,10 @@ var winston = require(__base + 'services/CustomWinston');
 /** fired events **/
 
 /** attributes **/
-function Indexer () {
+function Indexer (client) {
   this.index = 'whatsclose';
   this.type = '';
-  this.es_client = new es.Client ({
-    host: 'localhost:9200',
-    port: '9200'
-  });
+  this.es_client = client;
 }
 
 /** methods **/

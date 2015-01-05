@@ -1,3 +1,5 @@
+var es = require('elasticsearch');
+
 var winston = require(__base + 'services/CustomWinston');
 
 var BandIndexer = require(__base + 'services/indexing/indexer.es/Band.Indexer').indexer;
@@ -11,23 +13,24 @@ var MultipleConcertIndexer = require(__base + 'services/indexing/indexer.es/Mult
 
 /** attributes **/
 function IndexService() {
-
-
-
 }
 
 /** methods **/
 IndexService.prototype = {
 
   init: function() {
+    var client = new es.Client ({
+      host: 'localhost:9200',
+      port: '9200'
+    });
 
     // Avoid dynamic module loading when unnecessary
     // Here manual loading is straightforward
-    var band = new BandIndexer;
+    var band = new BandIndexer(client);
     band.init();
-    var concert = new ConcertIndexer;
+    var concert = new ConcertIndexer(client);
     concert.init();
-    var multipleConcert = new MultipleConcertIndexer;
+    var multipleConcert = new MultipleConcertIndexer(client);
     multipleConcert.init();
 
   }

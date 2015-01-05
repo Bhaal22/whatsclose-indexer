@@ -8,9 +8,6 @@ var indexService = require(__base + 'services/indexing/IndexService');
 
 /** attributes **/
 function ServicesHandler(name) {
-
-  
-
 }
 
 /** methods **/
@@ -23,8 +20,13 @@ ServicesHandler.prototype = {
     crawlService.init();
     geoCodeService.init();
     indexService.init();
-
   }
+  
+  // end: function () {
+  //   crawlService.end();
+  //   geoCodeService.end();
+  //   indexService.end();
+  // }
 };
 
 module.exports = new ServicesHandler();

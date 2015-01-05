@@ -11,8 +11,9 @@ var GEOCODE_MULTIPLE = 'geocode_multiple';
 /** fired events **/
 
 /** attributes **/
-function MultipleConcertIndexer () {
+function MultipleConcertIndexer (client) {
   this.type = 'multiple.concert';
+  this.es_client = client;
 }
 
 MultipleConcertIndexer.prototype = new root_indexer();

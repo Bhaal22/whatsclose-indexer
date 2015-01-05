@@ -9,8 +9,9 @@ var GEOCODE_OK = 'geocode_ok';
 
 /** fired events **/
 
-function ConcertIndexer () {
+function ConcertIndexer (client) {
   this.type = 'concert';
+  this.es_client = client;
 }
 
 ConcertIndexer.prototype = new root_indexer.I();
@@ -52,6 +53,6 @@ ConcertIndexer.prototype.exists = function (data) {
     });
 }
 
-  module.exports = {
+module.exports = {
     indexer: ConcertIndexer
-  };
+};
