@@ -32,7 +32,6 @@ IndexService.prototype = {
     concert.init();
     var multipleConcert = new MultipleConcertIndexer(client);
     multipleConcert.init();
-
   }
 
 };
