@@ -1,4 +1,3 @@
-var es = require('elasticsearch');
 // It seems that elasticsearch.Client doens't close the connection, that's why the indexer doesn't stop... => using elasticsearchclient instead
 var esClient = require('elasticsearchclient');
 
