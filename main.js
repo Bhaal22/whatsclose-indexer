@@ -6,11 +6,12 @@ var eventEmitter = require(__base + 'services/CustomEventEmitter');
 var svcHandler = require(__base + 'services/ServicesHandler.js');
 var argv = require('yargs').argv;
 
-
+var GEOCODE_OK = 'geocode_ok';
+var GEOCODE_MULTIPLE = 'geocode_multiple';
 var CRAWLED_EVENT = 'crawled';
+
 var nb_dates = 0;
-var must_index = [];
-var indexed = [];
+var must_index = {};
 
 
 var show_help = function () {
@@ -25,9 +26,13 @@ if (argv.help) {
   
 
   eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
-    nb_dates = nb_dates + crawlModule.band.concerts.length;
-    must_index[crawlModule.band.bandName] = crawlModule.band.concerts.length;
+    var bandName = crawlModule.band.name;
+    var nb_concerts = crawlModule.band.concerts.length;
 
+    nb_dates = nb_dates + nb_concerts;
+    must_index[bandName] = nb_concerts;
+
+    winston.info ("--- Whatsclose Main --- " + bandName + " " + nb_concerts);
     winston.info ("--- Whatsclose Main --- " + nb_dates + " dates crawl");
   });
 
@@ -39,6 +44,10 @@ if (argv.help) {
     must_index[_data.bandName]--;
   });
 
+  eventEmitter.on("exit", function () {
+    process.exit(0);
+  });
+
 
   
   // Services initialization
@@ -48,10 +57,18 @@ if (argv.help) {
   eventEmitter.emit("crawlData");
 
 
-//   setInterval(function () {
-//     var remaining = must_index.reduce(function(previousValue, currentValue, index, array){
-//   return previousValue + currentValue;
-// });
-//   }, 10000);
+  setInterval(function () {
+    winston.info("[Checking for exit] ...");
+    var remaining = 0;
+    
+    console.log(must_index);
+    for (var prop in must_index) {
+      remaining = remaining + must_index[prop];
+    }
+      
+    winston.info("[Checking for exit]: " + remaining);
+    if (remaining === 0)
+      eventEmitter.emit("exit");
+  }, 10000);
 }
 
