@@ -87,6 +87,14 @@ PUT /whatsclose
                          }
                        } 
       } 
+    },
+    "venue": {
+      "properties": {
+        "name": { "type": "string" },
+        "website": { "type": "string" },
+        "type": { "type": "string" },
+        "location" : { "type" : "string" },
+        "geometry" : { "type" : "geo_point"}
     }
   }
 }

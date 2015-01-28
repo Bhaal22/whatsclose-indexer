@@ -5,6 +5,7 @@ var winston = require(__base + 'services/CustomWinston');
 var BandIndexer = require(__base + 'services/indexing/indexer.es/Band.Indexer').indexer;
 var ConcertIndexer = require(__base + 'services/indexing/indexer.es/Concert.Indexer').indexer;
 var MultipleConcertIndexer = require(__base + 'services/indexing/indexer.es/Multiple.Concert.Indexer').indexer;
+var VenueIndexer = require(__base + 'services/indexing/indexer.es/Venue.Indexer').indexer;
 
 
 /** listened events **/
@@ -32,6 +33,9 @@ IndexService.prototype = {
     concert.init();
     var multipleConcert = new MultipleConcertIndexer(client);
     multipleConcert.init();
+
+    var venueIndexer = new VenueIndexer(client);
+    venueIndexer.init();
   }
 
 };

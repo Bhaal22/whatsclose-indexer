@@ -4,8 +4,11 @@ var root_indexer = require(__base + 'services/indexing/indexer.es/Indexer.js');
 var winston = require(__base + 'services/CustomWinston');
 var eventEmitter = require(__base + 'services/CustomEventEmitter');
 
+var Venue = require(__base + 'model/Venue');
+
 /** listened events **/
 var CRAWLING_BAND = 'crawling_band';
+var GEOCODE_OK = 'geocode_ok';
 
 /** fired events **/
 
@@ -21,9 +24,11 @@ VenueIndexer.prototype = new root_indexer.I();
 VenueIndexer.prototype.init = function () {
   var self = this;
   
-  eventEmitter.on(CRAWLING_BAND, function(venue) {
-    winston.info ('publishing venue ' + venue);
-    self.publish(band);
+  eventEmitter.on(GEOCODE_OK, function(concert) {
+    winston.info ('publishing venue ' + concert);
+
+    var venue = new Venue(concert);
+    self.publish(venue);
   });
   
 };
