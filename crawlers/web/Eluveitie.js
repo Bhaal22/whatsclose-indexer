@@ -18,17 +18,6 @@ band_module.testDataAcess = function(window) {
   
   // tests on the page
   var tests = [
-    /** examples
-    {
-      elt: $('div#show > div.sprite1 > h4').text(),
-      nullable: false,
-      expectedValue: 'Spectacles (vivants)'
-    },
-    {
-      elt: $('table.show_table').length,
-      nullable: false,
-      expectedValue: 1
-    } */
   ];
 
   return this.testDomElements(tests);
@@ -42,7 +31,7 @@ band_module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $ ('.row-wrapper');
+  var rows = $ ('#map-table > table > tbody > tr');
 
   var self = this;
     
