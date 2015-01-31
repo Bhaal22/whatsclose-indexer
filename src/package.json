@@ -8,6 +8,7 @@
     "url": "https://github.com/Bhaal22/whatsclose"
   },
   "dependencies": {
+    "datejs": "^1.0.0-rc3",
     "elasticsearch": "^2.4.0",
     "elasticsearchclient": "~0.5.3",
     "geocoder": "^0.2.0",
