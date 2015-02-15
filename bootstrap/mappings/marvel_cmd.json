@@ -95,6 +95,7 @@ PUT /whatsclose
         "type": { "type": "string" },
         "location" : { "type" : "string" },
         "geometry" : { "type" : "geo_point"}
+      }
     }
   }
 }

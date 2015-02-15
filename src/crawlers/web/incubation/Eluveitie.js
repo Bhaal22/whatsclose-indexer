@@ -31,20 +31,25 @@ band_module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $ ('#map-table > table > tbody > tr');
+  var rows_datum = $ ('div.map-table > table > tbody > tr > td.tbl-datum');
+  var rows_venue = $ ('div.map-table > table > tbody > tr > td.tbl-venue');
+  var rows_location = $ ('div.map-table > table > tbody > tr > td.tbl-stadt');
 
   var self = this;
+
+  console.log('Eluveitie entries: ', rows_datum.length);
+  rows_datum.each (function (index) {
+
+    console.log(index);
     
-  rows.slice(1).each (function (index) {
-
     var date = {
-      date: self.date (''),
-      venue: ''; 
-      location: '';
+      date: self.date ($(rows_datum[index]).text()),
+      venue: $(rows_venue[index]).text(),
+      location: $(rows_location[index]).text()
     };
-
+    
     results.push (date);
-  }
+  });
 
   return results;
 };
@@ -53,7 +58,7 @@ band_module.processData = function(window) {
  * Most simple date converter
  */
 band_module.date = function (d) {
-  var convert = Date.parseExact(d, 'yyyy-MM-dd')
+  var convert = Date.parseExact(d, 'dd.MM.yyyy');
   return convert.toString ('yyyy-MM-dd');
 }
 

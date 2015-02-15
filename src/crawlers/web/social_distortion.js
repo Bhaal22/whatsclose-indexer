@@ -41,7 +41,6 @@ social_distortion_module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var dates_table = $('table > tbody');
   var rows = $ ('table > tbody > tr');
 
   var self = this;

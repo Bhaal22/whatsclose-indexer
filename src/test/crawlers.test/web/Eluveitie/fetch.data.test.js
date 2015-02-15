@@ -2,7 +2,7 @@ var request = require('superagent');
 var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../../';
-var module = require(__base +  'crawlers/web/Eluveitie').crawlModule;
+var module = require(__base +  'crawlers/web/incubation/Eluveitie').crawlModule;
 
 describe('Eluveitie Suite', function(){
   it('get Eluveitie Tour generation', function(done){
@@ -16,21 +16,5 @@ describe('Eluveitie Suite', function(){
 
         done ();
       });
-  });
-
-  it('test date range generation', function(done){
-    
-    var date = module.date ("04-05 Oct 2014");
-
-    expect(date).to.equal('2014-10-04');
-
-    done ();
-  });
-
-  it('test date 16 Sep 2014', function(done){
-    
-    var date = module.date ("16 Sep 2014");
-    expect(date).to.equal('2014-09-16');
-    done ();
   });
 });
