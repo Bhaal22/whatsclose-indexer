@@ -25,7 +25,7 @@ VenueIndexer.prototype.init = function () {
   var self = this;
   
   eventEmitter.on(GEOCODE_OK, function(concert) {
-    winston.info ('publishing venue ' + concert);
+    winston.info ('publishing venue ' + concert.venue);
 
     var venue = new Venue(concert);
     self.publish(venue);

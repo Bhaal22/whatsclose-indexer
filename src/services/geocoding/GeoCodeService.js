@@ -70,7 +70,18 @@ GeoCoderService.prototype = {
 
         concertsList.forEach (function (concert) {
           self.searchGeometry(concert).then (function (data) {
-            if (data.results.length === 1) {
+            if (data.results.length === 0) {
+              var send = {
+                bandName: concert.bandName,
+                date: concert.date,
+                location: concert.location,
+                styles: concert.styles,
+                geometries: []
+              };
+              
+              eventEmitter.emit(GEOCODE_MULTIPLE, send);
+            }
+            else if (data.results.length === 1) {
         	    var geometry = data.results[0].geometry;
               
         	    concert.geometry = {
@@ -148,6 +159,9 @@ GeoCoderService.prototype = {
 	      if (data.status === 'OK') {
           deferred.resolve (data);
 	      }
+        else if (data.status === 'ZERO_RESULTS') {
+          deferred.resolve(data);
+        }
 	      else {
           winston.error (data);
           deferred.reject(Error (location));

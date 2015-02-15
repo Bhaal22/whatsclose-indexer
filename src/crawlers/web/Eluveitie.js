@@ -39,8 +39,6 @@ band_module.processData = function(window) {
 
   console.log('Eluveitie entries: ', rows_datum.length);
   rows_datum.each (function (index) {
-
-    console.log(index);
     
     var date = {
       date: self.date ($(rows_datum[index]).text()),
