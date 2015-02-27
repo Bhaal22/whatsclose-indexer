@@ -18,13 +18,7 @@ var show_help = function () {
   console.log ("--- Whatsclose indexer help ---");
 };
 
-if (argv.help) {
-  show_help ();
-} else if (argv.show_events) {
-  dump_event_description ();
-} else {
-  
-
+var start_indexing = function() {
   eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
     var bandName = crawlModule.band.name;
     var nb_concerts = crawlModule.band.concerts.length;
@@ -48,8 +42,6 @@ if (argv.help) {
     process.exit(0);
   });
 
-
-  
   // Services initialization
   svcHandler.init();
   
@@ -70,5 +62,20 @@ if (argv.help) {
     if (remaining === 0)
       eventEmitter.emit("exit");
   }, 10000);
+}
+
+if (argv.help) {
+  show_help();
+}
+else if (argv.show_events) {
+  dump_event_description ();
+}
+else if (argv.show_bands) {
+  var crawlerService = require(__base + 'services/crawling/CrawlService.js');
+  crawlerService.fetch_modules();
+  crawlerService.dump_modules_information();
+}
+else {
+  start_indexing();
 }
 

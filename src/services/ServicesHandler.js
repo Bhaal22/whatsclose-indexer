@@ -13,20 +13,13 @@ function ServicesHandler(name) {
 /** methods **/
 ServicesHandler.prototype = {
   
-   init: function () {
-    
+  init: function () {
     // Avoid dynamic module loading when unnecessary
     // Here manual loading is straightforward
     crawlService.init();
     geoCodeService.init();
     indexService.init();
   }
-  
-  // end: function () {
-  //   crawlService.end();
-  //   geoCodeService.end();
-  //   indexService.end();
-  // }
 };
 
 module.exports = new ServicesHandler();

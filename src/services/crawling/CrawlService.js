@@ -14,21 +14,14 @@ var CRAWLING_BAND = 'crawling_band';
 
 /** attributes **/
 function CrawlService() {
-
   this.crawl_modules = [];
-
 }
 
 /** methods **/
 CrawlService.prototype = {
-  
-  /**
-   * retrieve and initialise the available crawl modules 
-   * @return {void}
-   */
-  init: function () {
+
+  fetch_modules: function() {
     var self = this;
-    // retrieve the crawlers js files
     var crawlersDir = fs.readdirSync(__base + 'crawlers/web');
 
     for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
@@ -47,7 +40,23 @@ CrawlService.prototype = {
         self.crawl_modules.push(module);
       }
     };
-    
+  },
+
+  dump_modules_information: function() {
+    var self = this;
+    self.crawl_modules.forEach(function(module) {
+      console.log(module.crawlModule.band.name);
+    });
+  },
+  
+  /**
+   * retrieve and initialise the available crawl modules 
+   * @return {void}
+   */
+  init: function () {
+    var self = this;
+
+    self.fetch_modules();
     // register the listening callbacks
     eventEmitter.on(CRAWL_DATA_EVENT, function() {
       self.crawlData();
@@ -64,7 +73,6 @@ CrawlService.prototype = {
 
 
     this.crawl_modules.forEach(function(module) {
-      
       var p = self._process(module.crawlModule);
 
       p.then(function(crawlModule) {
@@ -97,7 +105,6 @@ CrawlService.prototype = {
       return crawlModule.crawlWebData();
     }
   }
-
 };
 
 module.exports = new CrawlService();
