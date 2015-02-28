@@ -75,6 +75,10 @@ else if (argv.show_bands) {
   crawlerService.fetch_modules();
   crawlerService.dump_modules_information();
 }
+else if (argv.index_band) {
+  console.log('will index specific bands');
+  
+}
 else {
   start_indexing();
 }
