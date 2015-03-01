@@ -77,7 +77,12 @@ else if (argv.show_bands) {
 }
 else if (argv.index_band) {
   console.log('will index specific bands');
-  
+
+  svcHandlert.init(
+    {
+      crawl_options: {
+        bands: index_band }
+    });
 }
 else {
   start_indexing();
