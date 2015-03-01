@@ -4,6 +4,8 @@ var Q = require('q');
 var winston = require(__base + 'services/CustomWinston.js');
 var eventEmitter = require(__base + 'services/CustomEventEmitter');
 
+require('array.prototype.find');
+
 
 /** listened events **/
 var CRAWL_DATA_EVENT = 'crawlData';
@@ -25,6 +27,8 @@ CrawlService.prototype = {
     var crawlersDir = fs.readdirSync(__base + 'crawlers/web');
 
     var names = bandNames || [];
+    console.log(names);
+    
     for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
       var currentCrawlModuleName = crawlersDir[i];
       var regex = /.js$/;
@@ -38,13 +42,18 @@ CrawlService.prototype = {
         
         if (names.length > 0) {
           // Load the js file as a node module
-          var bandName = names.find(function(n, index, array) {
-            return n == currentCrawlModuleName
+          var module = require(__base + 'crawlers/web/' + currentCrawlModuleName.replace(/.js$/, ''));
+          
+          var bandName = names.find(function(n) {
+            return n == module.crawlModule.band.name;
           });
           
           if (bandName != undefined) {
-            var module = require(__base + 'crawlers/web/' + currentCrawlModuleName.replace(/.js$/, ''));
             self.crawl_modules.push(module);
+          }
+          else {
+            console.log("undefined !!");
+            console.log(currentCrawlModuleName);
           }
         }
         else {
@@ -71,7 +80,7 @@ CrawlService.prototype = {
     var self = this;
 
     var opts = options || {};
-    self.fetch_modules(opts.index_band);
+    self.fetch_modules(opts.bands);
     // register the listening callbacks
     eventEmitter.on(CRAWL_DATA_EVENT, function() {
       self.crawlData();

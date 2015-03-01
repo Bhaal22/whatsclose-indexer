@@ -18,7 +18,9 @@ var show_help = function () {
   console.log ("--- Whatsclose indexer help ---");
 };
 
-var start_indexing = function() {
+var start_indexing = function(options) {
+  var opts = options || {};
+  
   eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
     var bandName = crawlModule.band.name;
     var nb_concerts = crawlModule.band.concerts.length;
@@ -43,7 +45,7 @@ var start_indexing = function() {
   });
 
   // Services initialization
-  svcHandler.init();
+  svcHandler.init(opts);
   
   // Entry Point for indexation
   eventEmitter.emit("crawlData");
@@ -78,10 +80,11 @@ else if (argv.show_bands) {
 else if (argv.index_band) {
   console.log('will index specific bands');
 
-  svcHandlert.init(
+  var bands = argv.index_band.split(",");
+  start_indexing(
     {
       crawl_options: {
-        bands: index_band }
+        bands: bands }
     });
 }
 else {
