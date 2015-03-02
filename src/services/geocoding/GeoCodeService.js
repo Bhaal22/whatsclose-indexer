@@ -1,5 +1,3 @@
-// TO REFACTOR
-
 var Q = require('q');
 var geocoder = require('geocoder');
 var sleep = require('sleep');
@@ -69,7 +67,11 @@ GeoCoderService.prototype = {
 			  var concertsList = crawledModule.band.concerts;
 
         concertsList.forEach (function (concert) {
-          self.searchGeometry(concert).then (function (data) {
+          var retry = 0;
+          var max_retries = 5;
+
+          //self.searchGeometry(concert).then (function (data) {
+          self.searchGeometryWithRetry(concert, retry, max_retries).then (function (data) {
             if (data.results.length === 0) {
               var send = {
                 bandName: concert.bandName,
@@ -92,7 +94,7 @@ GeoCoderService.prototype = {
             }
             else {
               var filtered_cities = self.filter_locations(data.results);
- 
+              
               if (filtered_cities.length > 1) {
 
                 var location = concert.location;
@@ -134,7 +136,6 @@ GeoCoderService.prototype = {
         	      eventEmitter.emit(GEOCODE_OK, concert);
               }
             }
-            
           }).fail (function (error) {
             winston.error("error getting geometry");
             console.log(concert.location);
@@ -152,10 +153,10 @@ GeoCoderService.prototype = {
 
     return geocoderPromisify(location).then (function (data) {
       var deferred = Q.defer ();
+
       sleep.usleep (500000);
 
       try {
-        
 	      if (data.status === 'OK') {
           deferred.resolve (data);
 	      }
@@ -163,16 +164,32 @@ GeoCoderService.prototype = {
           deferred.resolve(data);
         }
 	      else {
-          winston.error (data);
+          winston.info ('UNKNOW ERROR received. Retry in progress');
           deferred.reject(Error (location));
 	      }
-      } catch(e) {
+      }
+      catch(e) {
         console.log ('exception %s', e);
       }
-
+      
       return deferred.promise;
-    }).fail (function (err) {
-      console.log (err);
+    });
+  },
+
+  searchGeometryWithRetry: function(concert, retry, max_retries) {
+    var self = this;
+    retry || (retry = 0);
+
+
+    return self.searchGeometry(concert).fail(function (err) {
+      if (retry >= max_retries)
+        throw err;
+
+      // wait some time and try again
+      return Q.delay(5000).then(function () {
+        console.log("SearchGeometry Retry " + retry + "/" + max_retries);
+        return self.searchGeometryWithRetry(concert, ++retry, max_retries);
+      });
     });
   }
 };
