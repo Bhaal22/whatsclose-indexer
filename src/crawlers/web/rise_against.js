@@ -58,18 +58,19 @@ rise_against_module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var dates_table = $('table > tbody');
-  var rows = $ ('table > tbody > tr');
+  var rows = $ ('div.views-row');
 
   var self = this;
 
-  console.log('rise_against entries: ', rows.length - 1);
-  rows.slice(1).each (function (index) {
-    var infos = $('td', this);
-    
-    var date = $(infos[0]).text().trim();
-    var location = $(infos[1]).text().trim();
-    var venue = $(infos[2]).text().trim();
+  console.log('rise_against entries: ', rows.length);
+  rows.each (function (index) {
+    //var infos = $('td', this);
+
+    var date = $('span.date-display-single', this).text().trim();
+    var locality = $('span.locality', this).text().trim();
+    var area = $('span.area', this).text().trim();
+    var location = locality + ',' + area;
+    var venue = $('dic.field-name-title > h2', this).text().trim();
 
     results.push({ date: self.date (date), 
 		   location: location,
