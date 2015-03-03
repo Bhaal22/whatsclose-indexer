@@ -13,6 +13,10 @@ describe('Tagada Jones Suite', function(){
         var concerts = tagada.band.concerts;
 
         console.dir(concerts);
+
+        concerts.forEach(function(concert) {
+          console.log(concert.venue);
+        });
         expect(concerts).to.not.be.empty();
 
         done ();
