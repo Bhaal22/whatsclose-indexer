@@ -26,6 +26,20 @@ ConcertIndexer.prototype.init = function () {
 	});
 }
 
+ConcertIndexer.prototype.update = function (es_data, data) {
+  var deferred = Q.defer();
+
+  if (es_data._source.venue != data.venue)
+    deferred.resolve({
+      id: es_data._id,
+      doc: { venue: data.venue }
+    });
+  else
+    deferred.reject('[' + data.bandName + '] No need to update document id ' + es_data._id);
+
+  return deferred.promise;
+}
+
 ConcertIndexer.prototype.exists = function (data) {
   return this.es_client.search ({
     index: this.index,
@@ -45,9 +59,12 @@ ConcertIndexer.prototype.exists = function (data) {
       var results = body.hits.total;
       
       if (results === 0)
-        deferred.reject (Error (results));
+        deferred.reject (results);
+      else if (results === 1) {
+        deferred.resolve (body.hits.hits[0]);
+      }
       else
-        deferred.resolve ();
+        deferred.reject('Too much elements');
 
       return deferred.promise;
     });

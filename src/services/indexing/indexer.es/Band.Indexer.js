@@ -28,17 +28,15 @@ BandIndexer.prototype.init = function () {
   
 };
 
-BandIndexer.prototype.update = function (id, band) {
-  this.es_client.update({
-    index: this.index,
-    type: this.type,
-    id: id,
-    body: {
-      doc: {
-        last_crawl_date: band.last_crawl_date
-      }
-    }
+BandIndexer.prototype.update = function (es_band, band) {
+  var deferred = Q.defer();
+
+  deferred.resolve({
+    id: es_band._id,
+    doc: { last_crawl_date: band.last_crawl_date }
   });
+  
+  return deferred.promise;
 }
 
 BandIndexer.prototype.exists = function (band) {
@@ -63,7 +61,7 @@ BandIndexer.prototype.exists = function (band) {
       deferred.reject (Error (results));
     }
     else  {
-      deferred.resolve (body.hits.hits[0]._id);
+      deferred.resolve (body.hits.hits[0]);
     }
     
     return deferred.promise;
