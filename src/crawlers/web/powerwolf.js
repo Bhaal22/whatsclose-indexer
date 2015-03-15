@@ -46,21 +46,14 @@ band_module.processData = function(window) {
 
   var self = this;
 
-  console.log(rows.length);
-  var idx = 1;
   rows.each(function (index) {
     var str = $(this).text().trim();
     if (str != '') {
     
       var dt = $('td.date', this).text().trim();
-      console.log(dt);
       
-      var venue = $('td.venue', this).text().trim();
-      console.log(venue);
+      var venue = $('td.venue:eq(0)', this).text().trim();
       var location = $('td.city', this).text().trim();
-      console.log(location);
-      
-      console.log(idx);
       var date = {
         date: self.date (dt),
         venue: venue,
@@ -68,7 +61,6 @@ band_module.processData = function(window) {
       };
 
       results.push (date);
-      idx = idx+1;
     }
   });
 
