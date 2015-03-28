@@ -15,14 +15,14 @@ _module.band.styles = ['Symphonic Metal'];
 
 // Override the method that assess the web page structure
 _module.testDataAcess = function() {
-  winston.info('Dark Tranquility testDataAcess');
+  winston.info('Nightwish testDataAcess');
   return true;
 };
 
 _module.date = function (d) {
   var date_return;
   try {
-    date_return = Date.parseExact(d, ['yyyy-MM-dd']);
+    date_return = Date.parseExact(d, ['d MMM yyyy']);
   } catch(e) {
     console.log(e);
   }
@@ -31,22 +31,21 @@ _module.date = function (d) {
 
 // Override the method that retrieve the events data
 _module.processData = function(window) {
-  winston.info('dark tranquility processDate');
+  winston.info('Nightwish processDate');
 
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $ ('.events-table > table > tr');
+  var rows = $ ('section > ul > li');
 
   var self = this;
 
-  console.log('DT entries: ', rows.length - 1);
-  rows.slice(1).each (function (index) {
-    var infos = $('td', this);
+  console.log('Nightwish entries: ', rows.length);
+  rows.each (function (index) {
     
-    var date = $('td.date > meta', this).attr('content');
-    var venue = $(infos[1]).text().trim();
-    var location = $(infos[2]).text().trim();
+    var date = $('div.meta > time', this).text().trim();
+    var venue = $('div.description > span.venue', this).text().trim();
+    var location = $('div.meta > span.city', this).text().trim();
 
     results.push({ date: self.date (date), venue: venue, location: location });
   });

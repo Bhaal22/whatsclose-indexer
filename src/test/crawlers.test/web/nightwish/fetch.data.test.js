@@ -2,15 +2,15 @@ var request = require('superagent');
 var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../../';
-var social_distorsion = require(__base + 'crawlers/web/social_distorsion').crawlModule;
+var bandModule = require(__base + 'crawlers/web/nightwish').crawlModule;
 
-describe('Social Distorsion Suite', function(){
-  it('get Social Distorsion Tour generation', function(done){
+describe('Nightwish Suite', function(){
+  it('get Nigthwish Tour generation', function(done){
 
-    social_distorsion.crawlWebData().
+    bandModule.crawlWebData().
       then (function (data) {
        
-        var concerts = social_distorsion.band.concerts;
+        var concerts = bandModule.band.concerts;
         
         console.log(concerts);
         expect(concerts).to.not.be.empty();
@@ -19,48 +19,31 @@ describe('Social Distorsion Suite', function(){
       });
   });
 
-  it('checks Social Distorsion stylez', function(done){
+  it('Nightwish stylez', function(done){
 
-    social_distorsion.crawlWebData().
+    bandModule.crawlWebData().
       then (function (data) {
        
-        var styles = social_distorsion.band.styles;
-        expect(styles[2]).to.equal("rockabilly");
-        expect(styles[3]).to.equal("hardcore punk");
-        
-
+        var styles = bandModule.band.styles;
+        expect(styles[0]).to.equal("Symphonic Metal");
+       
         done ();
       });
   });
 
-  it('Social Distorsion special dates', function(done){
+  it('Nightwish special dates', function(done){
     
-    var date = social_distorsion.date ("Thu 09/11/2014");
+    var date = bandModule.date ("3 Feb 2015");
 
-    expect(date).to.equal('2014-09-11');
-
+    expect(date).to.equal('2015-02-03');
     done();
   });
 
-  it('Social Distorsion special dates with spaces', function(done){
+  it('Nightwish special dates', function(done){
     
-    //var date = social_distorsion.date ("8/29 - 8/31/2014");
+    var date = bandModule.date ("15 Mar 2015");
 
-    //expect(date).to.equal('2014-08-29');
-
+    expect(date).to.equal('2015-03-15');
     done();
   });
-
-  it('Social Distorsion concert on march 2nd', function(done){
-    
-    //var date_str = social_distorsion.date ("3/2/2014");
-
-    //var date = Date.parseExact(date_str, 'yyyy-MM-dd');
-    //expect(date.getDate()).to.equal(2);
-    //expect(date.getMonth()+1).to.equal(3);
-
-    done();
-  });
-
-  
 });
