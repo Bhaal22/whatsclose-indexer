@@ -1,5 +1,5 @@
-var Band = require('../../../model/Band');
-var CrawlerModule = require('../../../model/CrawlerModule');
+var Band = require('../../model/Band');
+var CrawlerModule = require('../../model/CrawlerModule');
 var winston = require('winston');
 require('datejs');
 
@@ -36,16 +36,16 @@ _module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $ ('ul#tourDates');
+  var rows = $ ('#tourDates > li');
 
   var self = this;
-
+ 
   console.log('ADTR entries: ', rows.length - 1);
   rows.slice(1).each (function (index) {
     
-    var date = $('li.clearfix > span.c1', this).text().trim();
-    var venue = $('li.clearfix > span.c2').text().trim();
-    var location = $('li.clearfix > span.c4').text().trim();
+    var date = $('span.c1', this).text().trim();
+    var venue = $('span.c2', this).text().trim();
+    var location = $('span.c4', this).text().trim();
 
     results.push({ date: self.date (date), venue: venue, location: location });
   });

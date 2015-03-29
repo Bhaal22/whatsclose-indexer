@@ -2,7 +2,7 @@ var request = require('superagent');
 var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../../';
-var bandModule = require(__base + 'crawlers/web/incubation/a_day_to_remember').crawlModule;
+var bandModule = require(__base + 'crawlers/web/a_day_to_remember').crawlModule;
 
 describe('A Day To Remember Suite', function(){
   it('get A Day To Remember Tour generation', function(done){
@@ -25,7 +25,7 @@ describe('A Day To Remember Suite', function(){
       then (function (data) {
        
         var styles = bandModule.band.styles;
-        expect(styles[0]).to.equal("Symphonic Metal");
+        expect(styles[0]).to.equal("Post-Hardcore");
        
         done ();
       });
