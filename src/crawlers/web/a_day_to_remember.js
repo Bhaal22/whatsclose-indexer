@@ -45,7 +45,7 @@ _module.processData = function(window) {
     
     var date = $('span.c1', this).text().trim();
     var venue = $('span.c2', this).text().trim();
-    var location = $('span.c4', this).text().trim();
+    var location = $('span.c3', this).text().trim();
 
     results.push({ date: self.date (date), venue: venue, location: location });
   });
