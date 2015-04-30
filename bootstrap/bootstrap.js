@@ -9,3 +9,18 @@ POST _aliases
   }
 ]
 }
+
+POST _aliases
+{
+  "actions": {
+    "remove": {
+      "index": "whatsclose-dev",
+      "alias": "whatsclose"
+    },
+
+    "add": {
+      "index": "whatsclose_2",
+      "alias": "whatsclose"
+    }
+  }
+}
