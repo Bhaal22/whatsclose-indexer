@@ -1,4 +1,4 @@
-PUT /whatsclose
+PUT $(index_name)
 {
   "settings": {
     "analysis": {
