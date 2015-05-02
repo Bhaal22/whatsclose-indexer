@@ -26,17 +26,28 @@ PUT $(index_name)
   },
   "mappings": {
     "band" : {
-      "properties":{
+      "properties":{      
         "name" : { 
-          "type" : "string",
-          "index_analyzer":  "autocomplete", 
-          "search_analyzer": "standard" },
-
+          "type" : "multi_field",
+          "fields": {
+            "exact": {
+              "type" : "string",
+              "index": "not_analyzed"
+            },
+            "not_exact": {
+              "type": "string",
+              "index_analyzer":  "autocomplete", 
+              "search_analyzer": "standard"
+            }
+          }
+        },
         "website" : { "type" : "string" },
         "styles" : { "type" : "string", "index_name" : "style" },
         "last_crawl_date" : { "type": "date", "format" : "YYYY-MM-dd" }
       }
     },
+
+    
     "concert" : {
       "properties": {
         "bandName" : { 
