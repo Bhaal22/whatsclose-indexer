@@ -46,7 +46,7 @@ BandIndexer.prototype.exists = function (band) {
     body: {
       query: {
         match: {
-          'name': band.name
+          'name.exact': band.name
         }
       }
     }
