@@ -125,6 +125,7 @@ CrawlerModule.prototype = {
   },
 
   envError: function(error){
+    console.log(error);
     winston.error('JSDOM ENV error while processing the crawl module');
   }
 }

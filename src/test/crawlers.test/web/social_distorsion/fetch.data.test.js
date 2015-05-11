@@ -2,7 +2,7 @@ var request = require('superagent');
 var expect = require('expect.js');
 
 global.__base = __dirname + '/../../../../';
-var social_distorsion = require(__base + 'crawlers/web/social_distorsion').crawlModule;
+var social_distorsion = require(__base + 'crawlers/web/social_distortion').crawlModule;
 
 describe('Social Distorsion Suite', function(){
   it('get Social Distorsion Tour generation', function(done){
