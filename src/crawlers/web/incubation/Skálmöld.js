@@ -50,8 +50,8 @@ band_module.processData = function(window) {
 
     var date = {
       date: self.date (''),
-      venue: ''; 
-      location: '';
+      venue: '',
+      location: ''
     };
 
     results.push (date);
