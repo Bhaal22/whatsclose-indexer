@@ -1,0 +1,39 @@
+{
+  "kind":"jobs",
+  "apiVersion":"v1",
+  "metadata":{
+    "name":"whatsclose-crawler",
+    "labels":{
+      "app":"whatsclose",
+      "role":"wc-crawler"
+    }
+  },
+  "spec":{
+    "selector": {
+      "app":"whatsclose",
+      "role":"wc-crawler"
+    },
+    "template":{
+      "metadata":{
+        "labels":{
+          "app":"whatsclose",
+          "role":"wc-crawler"
+        }
+      },
+      "spec":{
+        "containers":[
+          {
+            "name":"whatsclose-indexer",
+            "image":"kona.brightcomputing.com:5000/whatsclose-indexer:latest",
+	          "imagePullPolicy": "Always",
+          "env": [
+              { "name": "ELASTICSEARCH_IP", "value": "$(WHATSCLOSE_STORAGE_SERVICE_HOST)" },
+              { "name": "ELASTICSEARCH_PORT", "value": "$(WHATSCLOSE_STORAGE_SERVICE_PORT_HTTP)" }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+
