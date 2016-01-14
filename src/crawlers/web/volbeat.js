@@ -46,7 +46,7 @@ newCrawlModule.processData = function(window) {
   
   var self = this;
   var results = [];
-  var rows = $ ('.dates_list > tr');
+  var rows = $ ('.dates_list tr');
   console.log('volbeat entries: ', rows.length);
   rows.each (function (index) {
     var date = $('td.dates_date', this).text ();

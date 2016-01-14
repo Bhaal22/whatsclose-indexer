@@ -1,4 +1,3 @@
-PUT $(index_name)
 {
   "settings": {
     "analysis": {
@@ -111,7 +110,3 @@ PUT $(index_name)
   }
 }
 
-
-# Use of reindexing plugin
-# https://github.com/codelibs/elasticsearch-reindexing
-# POST /whatsclose-dev/_reindex/whatsclose_2

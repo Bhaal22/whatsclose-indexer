@@ -36,7 +36,7 @@ _module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $ ('.events-table > table > tr');
+  var rows = $ ('.events-table table tr');
 
   var self = this;
 
@@ -44,7 +44,7 @@ _module.processData = function(window) {
   rows.slice(1).each (function (index) {
     var infos = $('td', this);
     
-    var date = $('td.date > meta', this).attr('content');
+    var date = $('td.date meta', this).attr('content');
     var venue = $(infos[1]).text().trim();
     var location = $(infos[2]).text().trim();
 

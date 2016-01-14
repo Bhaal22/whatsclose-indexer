@@ -20,12 +20,27 @@ _module.testDataAcess = function() {
 };
 
 _module.date = function (d) {
+  var regex = /(\d+-\d+)(.*)/;
+
   var date_return;
+  var match = d.match(regex);
+
+  if (match) {
+    var range = match[1];
+    var last = match[2];
+
+    var days = range.split(/-/);
+
+    date_return = new Date(days[0] + last);
+  }
+else {
+
   try {
     date_return = Date.parseExact(d, ['d MMM yyyy']);
   } catch(e) {
     console.log(e);
   }
+}
   return date_return.toString('yyyy-MM-dd');
 }
 
@@ -42,7 +57,6 @@ _module.processData = function(window) {
 
   console.log('Nightwish entries: ', rows.length);
   rows.each (function (index) {
-    
     var date = $('div.meta > time', this).text().trim();
     var venue = $('div.description > span.venue', this).text().trim();
     var location = $('div.meta > span.city', this).text().trim();
