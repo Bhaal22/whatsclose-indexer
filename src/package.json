@@ -1,11 +1,14 @@
 {
   "name": "whatsclose-indexer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "author": "Jonathan Muller <muller.john@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/Bhaal22/whatsclose"
+  },
+  "scripts": {
+    "start": "node indexer.js"
   },
   "dependencies": {
     "array.prototype.find": "^1.0.0",

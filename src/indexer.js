@@ -84,7 +84,8 @@ else if (argv.index_band) {
   start_indexing(
     {
       crawl_options: {
-        bands: bands }
+        bands: bands
+      }
     });
 }
 else {
