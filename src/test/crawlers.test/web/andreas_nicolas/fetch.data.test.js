@@ -13,7 +13,7 @@ describe('Andreas et Nicolas Suite', function(){
        
         var concerts = andreas_nicolas.band.concerts;
 	  
-	console.log(concerts);
+	      console.log(concerts);
         expect(concerts).to.not.be.empty();
 
         done ();
