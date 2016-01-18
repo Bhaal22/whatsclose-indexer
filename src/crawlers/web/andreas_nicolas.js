@@ -19,7 +19,7 @@ band_module.testDataAcess = function(window) {
   // tests on the page
   var tests = [
     {
-      elt: $('div#show > div.sprite1 > h4').text(),
+      elt: $('div#show div.sprite1 h4').text(),
       nullable: false,
       expectedValue: 'Spectacles (vivants)'
     },
@@ -41,9 +41,9 @@ band_module.processData = function(window) {
   var $ = require('jquery')(window);
   
   var results = [];
-  var dates = $('.show_table > tr > td > span.show_date');
-  var venues = $('.show_table > tr > td > span.show_lieu');
-  var locations = $('.show_table > tr > td > span.show_lieu ~ span.show_ville');
+  var dates = $('.show_table tr td span.show_date');
+  var venues = $('.show_table tr td span.show_lieu');
+  var locations = $('.show_table tr td span.show_lieu ~ span.show_ville');
 
   var self = this;
 
