@@ -11,9 +11,9 @@ describe('Eluveitie Suite', function(){
       then (function (data) {
        
         var concerts = module.band.concerts;
-	console.log(concerts);
+	      console.log(concerts);
         expect(concerts).to.not.be.empty();
-
+        console.log('Eluveitie found valid entries: ', concerts.length);
         done ();
       });
   });
