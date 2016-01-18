@@ -151,7 +151,6 @@ GeoCoderService.prototype = {
           else {
 
             var concert = concerts.shift();
-            console.log("shift " + concert);
             self.processSingleConcert(concert);
           }
         }, 1000);
@@ -161,7 +160,6 @@ GeoCoderService.prototype = {
 
   searchGeometry: function (concert) {
     var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
-    console.log(concert);
     var location = concert.location;
 
     return geocoderPromisify(location).then (function (data) {
@@ -176,7 +174,7 @@ GeoCoderService.prototype = {
         }
 	      else {
           winston.error(data.status);
-          winston.info ('UNKNOW ERROR received. Retry in progress');
+          winston.info ('ERROR received. ' + data.status + ' Retry in progress');
           deferred.reject(Error (location));
 	      }
       }
