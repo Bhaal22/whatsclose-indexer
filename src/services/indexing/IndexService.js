@@ -21,8 +21,8 @@ IndexService.prototype = {
 
   init: function() {
     var client = new es.Client ({
-      host: process.env.ELASTICSEARCH_IP + ":" + process.env.ELASTICSEARCH_PORT || config.es.hostname || "localhost:9200",
-	    port: process.env.ELASTICSEARCH_PORT || config.es.port || 9200
+      host: "localhost:9200",
+	    port: 9200
     });
 
     // Avoid dynamic module loading when unnecessary

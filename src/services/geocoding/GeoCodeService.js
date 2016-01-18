@@ -1,6 +1,5 @@
 var Q = require('q');
 var geocoder = require('geocoder');
-var sleep = require('sleep');
 
 var eventEmitter = require(__base + 'services/CustomEventEmitter');
 var winston = require(__base + 'services/CustomWinston.js');
@@ -59,102 +58,114 @@ GeoCoderService.prototype = {
     return ret;
   },
 
+  processSingleConcert: function (concert) {
+    var retry = 0;
+    var max_retries = 5;
+
+    var self = this;
+    self.searchGeometryWithRetry(concert, retry, max_retries).then (function (data) {
+      if (data.results.length === 0) {
+        var send = {
+          bandName: concert.bandName,
+          date: concert.date,
+          location: concert.location,
+          styles: concert.styles,
+          geometries: []
+        };
+        
+        eventEmitter.emit(GEOCODE_MULTIPLE, send);
+      }
+      else if (data.results.length === 1) {
+        var geometry = data.results[0].geometry;
+        
+        concert.geometry = {
+          lat: geometry.location.lat,
+          lon: geometry.location.lng 
+        };
+        eventEmitter.emit(GEOCODE_OK, concert);
+      }
+      else {
+        var filtered_cities = self.filter_locations(data.results);
+        
+        if (filtered_cities.length > 1) {
+          
+          var location = concert.location;
+          winston.warn ("multiple geometries for location %s %d", location, filtered_cities.length);
+          try {
+            var geometries = data.results.map (function (geometry) {
+              
+              var conv = {
+                formatted_address: geometry.formatted_address,
+                lat: geometry.geometry.location.lat,
+                lon: geometry.geometry.location.lng
+              };
+              
+              return conv;
+            });
+            
+            var send = {
+              bandName: concert.bandName,
+              date: concert.date,
+              location: concert.location,
+              styles: concert.styles,
+              geometries: geometries
+            };
+            
+            eventEmitter.emit(GEOCODE_MULTIPLE, send);
+          }
+          catch (e) {
+            console.log (e);
+            console.log(e.stack);
+          }
+        }
+        else if (filtered_cities.length == 1) {
+          var geometry = filtered_cities[0].geometry;
+          
+          concert.geometry = {
+            lat: geometry.location.lat,
+            lon: geometry.location.lng
+          };
+          eventEmitter.emit(GEOCODE_OK, concert);
+        }
+      }
+    }).fail (function (error) {
+      winston.error("error getting geometry");
+      console.log(concert.location);
+	    console.log (error.stack);
+      eventEmitter.emit (GEOCODE_ERROR, error);
+    });
+  },
+  
   init: function () {
 	  var self = this;
 	  eventEmitter.on(CRAWLED_EVENT, function(crawledModule) {
       winston.info ("starting geocoding ...");
+
 		  if (crawledModule) {
-			  var concertsList = crawledModule.band.concerts;
+			  var concerts = crawledModule.band.concerts;
+        
+        var interval = setInterval(function() {
+          if (concerts.length === 0) {
+            clearInterval(interval);
+          }
+          else {
 
-        concertsList.forEach (function (concert) {
-          var retry = 0;
-          var max_retries = 5;
-
-          //self.searchGeometry(concert).then (function (data) {
-          self.searchGeometryWithRetry(concert, retry, max_retries).then (function (data) {
-            if (data.results.length === 0) {
-              var send = {
-                bandName: concert.bandName,
-                date: concert.date,
-                location: concert.location,
-                styles: concert.styles,
-                geometries: []
-              };
-              
-              eventEmitter.emit(GEOCODE_MULTIPLE, send);
-            }
-            else if (data.results.length === 1) {
-        	    var geometry = data.results[0].geometry;
-              
-        	    concert.geometry = {
-                lat: geometry.location.lat,
-                lon: geometry.location.lng 
-              };
-        	    eventEmitter.emit(GEOCODE_OK, concert);
-            }
-            else {
-              var filtered_cities = self.filter_locations(data.results);
-              
-              if (filtered_cities.length > 1) {
-
-                var location = concert.location;
-                winston.warn ("multiple geometries for location %s %d", location, filtered_cities.length);
-                try {
-                  var geometries = data.results.map (function (geometry) {
-                    
-                    var conv = {
-                      formatted_address: geometry.formatted_address,
-                      lat: geometry.geometry.location.lat,
-                      lon: geometry.geometry.location.lng
-                    };
-                    
-                    return conv;
-                  });
-                  
-                  var send = {
-                    bandName: concert.bandName,
-                    date: concert.date,
-                    location: concert.location,
-                    styles: concert.styles,
-                    geometries: geometries
-                  };
-                  
-                  eventEmitter.emit(GEOCODE_MULTIPLE, send);
-                }
-                catch (e) {
-                  console.log (e);
-                  console.log(e.stack);
-                }
-              }
-              else if (filtered_cities.length == 1) {
-                var geometry = filtered_cities[0].geometry;
-
-                concert.geometry = {
-                  lat: geometry.location.lat,
-                  lon: geometry.location.lng
-                };
-        	      eventEmitter.emit(GEOCODE_OK, concert);
-              }
-            }
-          }).fail (function (error) {
-            winston.error("error getting geometry");
-            console.log(concert.location);
-	          console.log (error.stack);
-            eventEmitter.emit (GEOCODE_ERROR, error);
-          });
-        });
-		  }
-	  });
+            var concert = concerts.shift();
+            console.log("shift " + concert);
+            self.processSingleConcert(concert);
+          }
+        }, 1000);
+      };
+    });
   },
 
   searchGeometry: function (concert) {
     var geocoderPromisify = Q.nbind(geocoder.geocode, geocoder);
+    console.log(concert);
     var location = concert.location;
 
     return geocoderPromisify(location).then (function (data) {
       var deferred = Q.defer ();
-
-      sleep.usleep (500000);
 
       try {
 	      if (data.status === 'OK') {
@@ -164,6 +175,7 @@ GeoCoderService.prototype = {
           deferred.resolve(data);
         }
 	      else {
+          winston.error(data.status);
           winston.info ('UNKNOW ERROR received. Retry in progress');
           deferred.reject(Error (location));
 	      }
