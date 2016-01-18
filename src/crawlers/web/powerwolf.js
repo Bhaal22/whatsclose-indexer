@@ -5,7 +5,7 @@ require('datejs');
 
 
 var band_module = new CrawlerModule();
-band_module.fullUrl = 'http://www.powerwolf.net/2011/tour.htm';
+band_module.fullUrl = 'http://www.bandsintown.com/Powerwolf';
 band_module.band = new Band();
 band_module.band.name = 'Powerwolf';
 band_module.band.website = 'http://www.powerwolf.net';
@@ -37,81 +37,36 @@ band_module.testDataAcess = function(window) {
 
 // Override the method that retrieve the events data
 band_module.processData = function(window) {
-  winston.info('Powerwolf processDate');
+  winston.info('dropkick processDate');
 
   var $ = require('jquery')(window);
   
   var results = [];
-  var rows = $('div#contentleft > table > tr');
+  var rows = $ ('.events-table table tr');
 
   var self = this;
 
-  rows.each(function (index) {
-    var str = $(this).text().trim();
-    if (str != '') {
+  console.log('dropkick entries: ', rows.length - 1);
+  rows.slice(1).each (function (index) {
+    var infos = $('td', this);
     
-      var dt = $('td.date', this).text().trim();
-      
-      var venue = $('td.venue:eq(0)', this).text().trim();
-      var location = $('td.city', this).text().trim();
-      var date = {
-        date: self.date (dt),
-        venue: venue,
-        location: location
-      };
+    var date = $('td.date meta', this).attr('content');
+    var venue = $(infos[1]).text().trim();
+    var location = $(infos[2]).text().trim();
 
-      results.push (date);
-    }
+    results.push({ date: self.date (date), venue: venue, location: location });
   });
 
   return results;
 };
 
-/*
- * Most simple date converter
- */
 band_module.date = function (d) {
-  var regex = /^(\d+)\.-\s*(\d+)\.(\d+)\.(\d+)$/;
-  var regex2 = /^(\d+\.\d+)\.-\s*(\d+\.\d+)\.(\d+)$/;
-
   var date_return;
-  var match = d.match(regex);
-
-  if (match) {
-    var first = match[1];
-    var last = match[2];
-    var month = match[3];
-    var year = match[4];
-
-    try {
-      date_return = Date.parseExact(first + '.' + month + '.' + year, ['dd.MM.yyyy']);
-    } catch (e) {
-      console.log(e);
-    }
+  try {
+    date_return = Date.parseExact(d, ['yyyy-MM-dd']);
+  } catch(e) {
+    console.log(e);
   }
-  else {
-    var match2 = d.match(regex2);
-    
-    if (match2) {
-      var first = match2[1];
-      var last = match2[2];
-      var year = match2[3];
-      
-      try {
-        date_return = Date.parseExact(first + '.' + year, ['dd.MM.yyyy']);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    else {
-      try {
-        date_return = Date.parseExact(d, ['dd.MM.yyyy']);
-      } catch(e) {
-        console.log(e);
-      }
-    }
-  } 
-
   return date_return.toString('yyyy-MM-dd');
 }
 

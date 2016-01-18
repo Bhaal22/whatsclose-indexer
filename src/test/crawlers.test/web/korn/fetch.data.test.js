@@ -5,8 +5,8 @@ global.__base = __dirname + '/../../../../';
 
 var tagada = require(__base + 'crawlers/web/incubation/korn').crawlModule;
 
-describe('Tagada Jones Suite', function(){
-  it('get Tagada Jones Tour generation', function(done) {
+describe('Korn Suite', function(){
+  it('get Korn Tour generation', function(done) {
 
     tagada.crawlWebData().
       then (function (data) {
