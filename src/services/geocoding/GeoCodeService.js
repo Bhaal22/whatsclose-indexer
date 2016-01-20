@@ -145,13 +145,13 @@ GeoCoderService.prototype = {
         var concert = self.concerts.shift();
         self.processSingleConcert(concert);
       }
-    }, 1000);
+    }, 200);
     
 	  eventEmitter.on(CRAWLED_EVENT, function(crawledModule) {
       winston.info ("starting geocoding ...");
 
 		  if (crawledModule) {
-			  var concerts = crawledModule.band.concerts;
+			  self.concerts.push.apply(self.concerts, crawledModule.band.concerts);
         
       };
     });
