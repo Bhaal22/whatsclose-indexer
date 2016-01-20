@@ -15,6 +15,7 @@ var GEOCODE_ERROR = 'geocode_error';
 
 /** attributes **/
 function GeoCoderService(name) {
+  this.concerts = [];
 }
 
 if (!Array.prototype.find) {
@@ -138,22 +139,20 @@ GeoCoderService.prototype = {
   
   init: function () {
 	  var self = this;
+
+    var interval = setInterval(function() {
+      if (self.concerts.length > 0) {
+        var concert = self.concerts.shift();
+        self.processSingleConcert(concert);
+      }
+    }, 1000);
+    
 	  eventEmitter.on(CRAWLED_EVENT, function(crawledModule) {
       winston.info ("starting geocoding ...");
 
 		  if (crawledModule) {
 			  var concerts = crawledModule.band.concerts;
         
-        var interval = setInterval(function() {
-          if (concerts.length === 0) {
-            clearInterval(interval);
-          }
-          else {
-
-            var concert = concerts.shift();
-            self.processSingleConcert(concert);
-          }
-        }, 1000);
       };
     });
   },
