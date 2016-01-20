@@ -20,9 +20,18 @@ function IndexService() {
 IndexService.prototype = {
 
   init: function() {
+    
+    var host = "localhost:9200";
+    var port = 9200;
+
+    if ((process.env.ELASTICSEARCH_IP != undefined) || (process.env.ELASTICSEARCH_PORT != undefined)) {
+      host = process.env.ELASTICSEARCH_IP + ":" + process.env.ELASTICSEARCH_PORT;
+      port = process.env.ELASTICSEARCH_PORT;
+    }
+    
     var client = new es.Client ({
-      host: process.env.ELASTICSEARCH_IP + ":" + process.env.ELASTICSEARCH_PORT || "localhost:9200",
-      port: process.env.ELASTICSEARCH_PORT || 9200    
+      host: host,
+      port: port    
     });
 
     // Avoid dynamic module loading when unnecessary
