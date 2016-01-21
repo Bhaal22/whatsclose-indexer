@@ -53,21 +53,20 @@ ConcertIndexer.prototype.exists = function (data) {
         }
       }
     }
-  })
-    .then (function (body) {
-      var deferred = Q.defer();
-      var results = body.hits.total;
-      
-      if (results === 0)
-        deferred.reject (results);
-      else if (results === 1) {
-        deferred.resolve (body.hits.hits[0]);
-      }
-      else
-        deferred.reject('Too much elements');
-
-      return deferred.promise;
-    });
+  }).then (function (body) {
+    var deferred = Q.defer();
+    var results = body.hits.total;
+    
+    winston.warn("body.hits.total = " + results);
+    if (results === 0)
+      deferred.reject (results);
+    else if (results === 1)
+      deferred.resolve (body.hits.hits[0]);
+    else
+      deferred.reject('Too much elements');
+    
+    return deferred.promise;
+  });
 }
 
 module.exports = {
