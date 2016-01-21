@@ -40,7 +40,7 @@ VenueIndexer.prototype.exists = function (venue) {
     body: {
       query: {
         match: {
-          'name': venue.name
+          'name.exact': venue.name
         }
       }
     }
@@ -59,8 +59,6 @@ VenueIndexer.prototype.exists = function (venue) {
     }
     
     return deferred.promise;
-  }).catch (function(error) {
-    winston.err(error);
   });
 };
 
