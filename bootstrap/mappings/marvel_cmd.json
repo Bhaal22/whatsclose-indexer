@@ -1,47 +1,10 @@
 {
-  "settings": {
-    "analysis": {
-      "filter": {
-        "autocomplete_filter": {
-          "type":     "edge_ngram",
-          "min_gram": 1,
-          "max_gram": 20
-        }
-      },
-      "analyzer": {
-        "autocomplete": {
-          "type":      "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "autocomplete_filter"
-          ]
-        },
-        "autocomplete_search": {
-          "tokenizer": "keyword"
-        }
-      }
-    }
-  },
   "mappings": {
     "band" : {
-      "properties":{      
-        "name" : { 
-          "type" : "multi_field",
-          "fields": {
-            "exact": {
-              "type" : "string",
-              "index": "not_analyzed"
-            },
-            "not_exact": {
-              "type": "string",
-              "index_analyzer":  "autocomplete", 
-              "search_analyzer": "standard"
-            }
-          }
-        },
+      "properties": {      
+        "name" :    { "type" : "string" },
         "website" : { "type" : "string" },
-        "styles" : { "type" : "string", "index_name" : "style" },
+        "styles" :  { "type" : "string" },
         "last_crawl_date" : { "type": "date", "format" : "YYYY-MM-dd" }
       }
     },
@@ -49,22 +12,9 @@
     
     "concert" : {
       "properties": {
-        "bandName" : { 
-          "type" : "multi_field",
-          "fields": {
-            "exact": {
-              "type" : "string",
-              "index": "not_analyzed"
-            },
-            "not_exact": {
-              "type": "string",
-              "index_analyzer":  "autocomplete", 
-              "search_analyzer": "standard"
-            }
-          }
-        },
-        "styles" : { "type": "string", "index_name" : "style" },
-        "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
+        "bandName" : { "type" : "string" },
+        "styles" :   { "type": "string" },
+        "date" :     { "type" : "date", "format" : "YYYY-MM-dd" },
         "location" : { "type" : "string" },
         "venue" : { "type": "string" },
         "geometry" : { "type" : "geo_point"}
@@ -72,25 +22,12 @@
     },
     "multiple.concert" : {
       "properties": {
-        "bandName" : { 
-          "type" : "multi_field",
-          "fields": {
-            "exact": {
-              "type" : "string",
-              "index": "not_analyzed"
-            },
-            "not_exact": {
-              "type": "string",
-              "index_analyzer":  "autocomplete", 
-              "search_analyzer": "standard"
-            }
-          }
-        },
-        "styles" : { "type": "string", "index_name" : "tyle" },
-        "date" : { "type" : "date", "format" : "YYYY-MM-dd" },
+        "bandName" : { "type" : "string" },
+        "styles" :   { "type": "string" },
+        "date" :     { "type" : "date", "format" : "YYYY-MM-dd" },
         "location" : { "type" : "string" },
-        "venue" : { "type": "string" },
-        "geometries" : { "type" : "nested", "index_name": "geo",
+        "venue" :    { "type": "string" },
+        "geometries" : { "type" : "nested",
                          "properties": {
                            "formatted_address" : { "type": "string" },
                            "geometry" : { "type": "geo_point" }
