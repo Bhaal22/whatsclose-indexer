@@ -97,8 +97,10 @@ GeoCoderService.prototype = {
               
               var conv = {
                 formatted_address: geometry.formatted_address,
-                lat: geometry.geometry.location.lat,
-                lon: geometry.geometry.location.lng
+                geometry: {
+                  lat: geometry.geometry.location.lat,
+                  lon: geometry.geometry.location.lng
+                }
               };
               
               return conv;
