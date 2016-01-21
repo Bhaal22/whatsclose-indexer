@@ -65,8 +65,6 @@ BandIndexer.prototype.exists = function (band) {
     }
     
     return deferred.promise;
-  }).catch (function(error) {
-    winston.err(error);
   });
 };
 
