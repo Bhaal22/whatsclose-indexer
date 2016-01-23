@@ -48,6 +48,7 @@ ConcertIndexer.prototype.exists = function (data) {
         bool: {
           must: [
             { match: { 'bandName.exact' : data.bandName }},
+            { match: { 'venue': data.venue }},
             { match: { 'date': data.date }}
           ]
         }

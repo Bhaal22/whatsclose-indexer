@@ -38,7 +38,6 @@ Indexer.prototype = {
 
     this.exists (data)
       .catch (function (error) {
-        
         self.es_client.create({
           index: self.index,
           type: self.type,

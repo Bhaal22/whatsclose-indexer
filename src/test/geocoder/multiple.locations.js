@@ -84,14 +84,9 @@ it('Copenhagen geocoding multiple', function(done) {
   };
   geocode_svc.searchGeometry(concert).then (function (data) {
     
-    var idx = geocode_svc.filter_locations(data.results);
-
-    console.dir(idx[0]);
-    console.log("");
-    console.dir(idx[1]);
+    var idx = geocode_svc.filter_locations(data.results);    
     
-    
-    expect(idx.length).eql(1);
+    expect(idx.length).eql(2);
     done();
   });
 }); 
