@@ -76,3 +76,22 @@ describe('Multiple locations suite', function(){
     });
   }); 
 });
+
+it('Copenhagen geocoding multiple', function(done) {
+  
+  var concert = { 
+    location: "Copenhagen,Denmark"
+  };
+  geocode_svc.searchGeometry(concert).then (function (data) {
+    
+    var idx = geocode_svc.filter_locations(data.results);
+
+    console.dir(idx[0]);
+    console.log("");
+    console.dir(idx[1]);
+    
+    
+    expect(idx.length).eql(1);
+    done();
+  });
+}); 
