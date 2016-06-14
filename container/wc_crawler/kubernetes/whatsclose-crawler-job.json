@@ -23,7 +23,7 @@
         "containers":[
           {
             "name":"whatsclose-indexer",
-            "image":"kona.brightcomputing.com:5000/whatsclose-indexer:latest",
+            "image":"whatsclose-indexer:latest",
             "imagePullPolicy": "Always",
           "env": [
               { "name": "ELASTICSEARCH_IP", "value": "$(WHATSCLOSE_STORAGE_SERVICE_HOST)" },
