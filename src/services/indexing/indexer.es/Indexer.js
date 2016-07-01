@@ -1,8 +1,5 @@
 var Q = require('q');
 
-// It seems that elasticsearch.Client doens't close the connection, that's why the indexer doesn't stop... => using elasticsearchclient instead
-var esClient = require('elasticsearchclient');
-
 var winston = require(__base + 'services/CustomWinston');
 
 /** listened events **/
