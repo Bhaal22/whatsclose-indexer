@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo $#
+
 curl -XPUT 'http://10.150.61.4:9200/whatsclose/' -d '
 {
   "settings": {
