@@ -1,6 +1,14 @@
 #!/bin/sh
 
-echo $#
+usage() {
+    echo "Fullfill Whatsclose.io initial mapping :"
+    echo "  full_mapping.sh elastic_search_hostname" 
+}
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
 
 es_hostname=$1
 
