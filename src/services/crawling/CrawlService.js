@@ -4,9 +4,6 @@ var Q = require('q');
 var winston = require(__base + 'services/CustomWinston.js');
 var eventEmitter = require(__base + 'services/CustomEventEmitter');
 
-require('array.prototype.find');
-
-
 /** listened events **/
 var CRAWL_DATA_EVENT = 'crawlData';
 
