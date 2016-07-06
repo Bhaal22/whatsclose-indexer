@@ -20,7 +20,8 @@ BandIndexer.prototype = new root_indexer.I();
 /** methods **/
 BandIndexer.prototype.init = function () {
   var self = this;
-  
+
+  winston.info('init Band.indexer');
   eventEmitter.on(CRAWLING_BAND, function(band) {
     winston.info ('publishing band ' + band.name);
     self.publish(band);

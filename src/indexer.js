@@ -81,6 +81,7 @@ else if (argv.index_band) {
   console.log('will index specific bands');
 
   var bands = argv.index_band.split(",");
+  winston.info("Band: " + bands);
   start_indexing(
     {
       crawl_options: {

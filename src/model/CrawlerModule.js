@@ -1,7 +1,7 @@
 var http = require('http');
 var env = require('jsdom').env;
 var Q = require('q');
-var winston = require('winston');
+var winston = require(__base + 'services/CustomWinston');
 
 // attributes
 var CrawlerModule = function () {
@@ -13,7 +13,6 @@ var CrawlerModule = function () {
   this.band = {};
 }
 
-// methods
 CrawlerModule.prototype = {
   isValid: function() {
     winston.info('CrawlerModule.isValid');

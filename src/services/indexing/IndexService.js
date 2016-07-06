@@ -28,7 +28,8 @@ IndexService.prototype = {
       host = process.env.ELASTICSEARCH_IP + ":" + process.env.ELASTICSEARCH_PORT;
       port = process.env.ELASTICSEARCH_PORT;
     }
-    
+
+    winston.info('Init ES client with host=' + host + ' and port:' + port);
     var client = new es.Client ({
       host: host,
       port: port    

@@ -4,25 +4,14 @@ var init_logger = function () {
   winston = new (winston.Logger)({
     transports: [
       new (winston.transports.Console)({
-        level: 'trace',
+        level: 'silly',
         prettyPrint: true,
         colorize: true,
         silent: false,
         timestamp: false
       })
     ],
-    levels: {
-      trace: 0,
-      input: 1,
-      verbose: 2,
-      prompt: 3,
-      debug: 4,
-      info: 5,
-      data: 6,
-      help: 7,
-      warn: 8,
-      error: 9
-    },
+    levels: { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 },
     colors: {
       trace: 'magenta',
       input: 'grey',
@@ -39,6 +28,6 @@ var init_logger = function () {
 
 };
 
-init_logger ();
+init_logger();
 
 module.exports = winston;

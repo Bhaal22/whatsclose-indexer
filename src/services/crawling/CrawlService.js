@@ -24,7 +24,6 @@ CrawlService.prototype = {
     var crawlersDir = fs.readdirSync(__base + 'crawlers/web');
 
     var names = bandNames || [];
-    console.log(names);
     
     for ( var i = 0, ii = crawlersDir.length; i < ii; i++) {
       var currentCrawlModuleName = crawlersDir[i];
@@ -47,10 +46,6 @@ CrawlService.prototype = {
           
           if (bandName != undefined) {
             self.crawl_modules.push(module);
-          }
-          else {
-            console.log("undefined !!");
-            console.log(currentCrawlModuleName);
           }
         }
         else {
@@ -92,8 +87,9 @@ CrawlService.prototype = {
     var self = this;
     var promises = [];
 
-
-    this.crawl_modules.forEach(function(module) {
+    winston.info("Processing all modules ..." + this.crawl_modules.length);
+    self.crawl_modules.forEach(function(module) {
+      winston.info("Processing .... " + module.crawlModule.band.name);
       var p = self._process(module.crawlModule);
 
       p.then(function(crawlModule) {
