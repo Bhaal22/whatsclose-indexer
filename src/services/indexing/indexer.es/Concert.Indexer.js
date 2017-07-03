@@ -19,12 +19,12 @@ ConcertIndexer.prototype = new root_indexer.I();
 ConcertIndexer.prototype.init = function () {
   var self = this;
   winston.info('init Concert.indexer');
-	
+
 	eventEmitter.on(GEOCODE_OK, function(crawledModule) {
     winston.info ('publishing concert for ' + crawledModule.bandName + ' ' + crawledModule.location);
 		self.publish(crawledModule);
 	});
-}
+};
 
 ConcertIndexer.prototype.update = function (es_data, data) {
   var deferred = Q.defer();
@@ -38,7 +38,7 @@ ConcertIndexer.prototype.update = function (es_data, data) {
     deferred.reject('[' + data.bandName + '] No need to update document id ' + es_data._id);
 
   return deferred.promise;
-}
+};
 
 ConcertIndexer.prototype.exists = function (data) {
   return this.es_client.search ({
@@ -57,7 +57,7 @@ ConcertIndexer.prototype.exists = function (data) {
   }).then (function (body) {
     var deferred = Q.defer();
     var results = body.hits.total;
-    
+
     winston.warn("body.hits.total = " + results);
     if (results === 0)
       deferred.reject (results);
@@ -65,10 +65,10 @@ ConcertIndexer.prototype.exists = function (data) {
       deferred.resolve (body.hits.hits[0]);
     else
       deferred.reject('Too much elements');
-    
+
     return deferred.promise;
   });
-}
+};
 
 module.exports = {
     indexer: ConcertIndexer

@@ -20,7 +20,7 @@ var show_help = function () {
 
 var start_indexing = function(options) {
   var opts = options || {};
-  
+
   eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
     var bandName = crawlModule.band.name;
     var nb_concerts = crawlModule.band.concerts.length;
@@ -46,7 +46,7 @@ var start_indexing = function(options) {
 
   // Services initialization
   svcHandler.init(opts);
-  
+
   // Entry Point for indexation
   eventEmitter.emit("crawlData");
 
@@ -54,12 +54,12 @@ var start_indexing = function(options) {
   setInterval(function () {
     winston.info("[Checking for exit] ...");
     var remaining = 0;
-    
+
     console.log(must_index);
     for (var prop in must_index) {
       remaining = remaining + must_index[prop];
     }
-      
+
     winston.info("[Checking for exit]: " + remaining);
     if (remaining === 0)
       eventEmitter.emit("exit");

@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "datejs": "^1.0.0-rc3",
-    "elasticsearch": "^11.0.1",
+    "elasticsearch": "^13.2.0",
     "geocoder": "^0.2.2",
     "jquery": "~3.0.0",
     "jsdom": "~9.3.0 ",
-    "q": "1.0.X",
+    "q": "^1.5.0",
     "qs": "^6.2.0",
     "url": "^0.11.0",
     "winston": "~2.2.0",

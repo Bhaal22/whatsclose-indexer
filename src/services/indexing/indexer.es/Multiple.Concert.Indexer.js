@@ -21,7 +21,7 @@ MultipleConcertIndexer.prototype = new root_indexer();
 /** methods **/
 MultipleConcertIndexer.prototype.init = function () {
   var self = this;
-	
+
 	eventEmitter.on(GEOCODE_MULTIPLE, function(crawledModule) {
 	  self.publish(crawledModule);
 	});

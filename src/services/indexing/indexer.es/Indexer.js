@@ -22,7 +22,7 @@ Indexer.prototype = {
   exists: function (data) {
     throw 'Not implemented';
   },
-  
+
   update: function (es_data, data) {
     var deferred = Q.defer();
     deferred.reject('Not implemented');
@@ -34,15 +34,19 @@ Indexer.prototype = {
     var _data = data;
 
     this.exists (data)
-      .catch (function (error) {
-        self.es_client.create({
-          index: self.index,
-          type: self.type,
-          body: _data
-        }, function (err, resp) {
-          if (err != undefined)
-            console.log ('error %s', err);
-        });
+          .catch (function (error) {
+
+              console.dir(self.index);
+              console.dir(self.type);
+              console.dir(JSON.stringify(_data));
+              self.es_client.create({
+                  index: self.index,
+                  type: self.type,
+                  body: JSON.stringify(_data)
+              }, function (err, resp) {
+                  if (err != undefined)
+                      console.log ('error %s', err);
+              });
       }).then(function(es_data) {
         return self.update(es_data, data);
 
