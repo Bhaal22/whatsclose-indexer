@@ -42,7 +42,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
     "band" : {
       "properties": {
         "name" : {
-          "type" : "multi_field",
+          "type" : "text",
           "fields": {
             "exact": {
               "type" : "string",
@@ -64,7 +64,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
     "concert" : {
       "properties": {
        "bandName" : {
-          "type" : "multi_field",
+          "type" : "text",
           "fields": {
             "exact": {
               "type" : "string",
@@ -87,7 +87,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
     "multiple.concert" : {
       "properties": {
         "bandName" : {
-          "type" : "multi_field",
+          "type" : "text",
           "fields": {
             "exact": {
               "type" : "string",
@@ -115,7 +115,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
     "venue": {
       "properties": {
         "name" : {
-          "type" : "multi_field",
+          "type" : "text",
           "fields": {
             "exact": {
               "type" : "string",
