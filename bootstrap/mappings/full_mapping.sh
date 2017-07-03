@@ -40,8 +40,8 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
   },
   "mappings": {
     "band" : {
-      "properties": {      
-        "name" : { 
+      "properties": {
+        "name" : {
           "type" : "multi_field",
           "fields": {
             "exact": {
@@ -50,7 +50,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
             },
             "not_exact": {
               "type": "string",
-              "analyzer":  "autocomplete", 
+              "analyzer":  "autocomplete",
               "search_analyzer": "standard"
             }
           }
@@ -61,10 +61,9 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
       }
     },
 
-    
     "concert" : {
       "properties": {
-        "bandName" : { 
+       "bandName" : {
           "type" : "multi_field",
           "fields": {
             "exact": {
@@ -73,7 +72,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
             },
             "not_exact": {
               "type": "string",
-              "analyzer":  "autocomplete", 
+              "analyzer":  "autocomplete",
               "search_analyzer": "standard"
             }
           }
@@ -87,7 +86,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
     },
     "multiple.concert" : {
       "properties": {
-        "bandName" : { 
+        "bandName" : {
           "type" : "multi_field",
           "fields": {
             "exact": {
@@ -96,7 +95,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
             },
             "not_exact": {
               "type": "string",
-              "analyzer":  "autocomplete", 
+              "analyzer":  "autocomplete",
               "search_analyzer": "standard"
             }
           }
@@ -110,12 +109,12 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
                            "formatted_address" : { "type": "string" },
                            "geometry" : { "type": "geo_point" }
                          }
-                       } 
-      } 
+                       }
+      }
     },
     "venue": {
       "properties": {
-        "name" : { 
+        "name" : {
           "type" : "multi_field",
           "fields": {
             "exact": {
@@ -124,7 +123,7 @@ curl -XPUT "http://$es_hostname:9200/whatsclose/" -d '
             },
             "not_exact": {
               "type": "string",
-              "analyzer":  "autocomplete", 
+              "analyzer":  "autocomplete",
               "search_analyzer": "standard"
             }
           }
