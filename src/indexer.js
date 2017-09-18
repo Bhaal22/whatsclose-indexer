@@ -15,81 +15,80 @@ var must_index = {};
 
 
 var show_help = function () {
-  console.log ("--- Whatsclose indexer help ---");
+    console.log ("--- Whatsclose indexer help ---");
 };
 
 var start_indexing = function(options) {
-  var opts = options || {};
+    var opts = options || {};
 
-  eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
-    var bandName = crawlModule.band.name;
-    var nb_concerts = crawlModule.band.concerts.length;
+    eventEmitter.on(CRAWLED_EVENT, function (crawlModule) {
+        var bandName = crawlModule.band.name;
+        var nb_concerts = crawlModule.band.concerts.length;
 
-    nb_dates = nb_dates + nb_concerts;
-    must_index[bandName] = nb_concerts;
+        nb_dates = nb_dates + nb_concerts;
+        must_index[bandName] = nb_concerts;
 
-    winston.info ("--- Whatsclose Main --- " + bandName + " " + nb_concerts);
-    winston.info ("--- Whatsclose Main --- " + nb_dates + " dates crawl");
-  });
+        winston.info ("--- Whatsclose Main --- " + bandName + " " + nb_concerts);
+        winston.info ("--- Whatsclose Main --- " + nb_dates + " dates crawl");
+    });
 
-  eventEmitter.on(GEOCODE_OK, function (_data) {
-    must_index[_data.bandName]--;
-  });
+    eventEmitter.on(GEOCODE_OK, function (_data) {
+        must_index[_data.bandName]--;
+    });
 
-  eventEmitter.on(GEOCODE_MULTIPLE, function (_data) {
-    must_index[_data.bandName]--;
-  });
+    eventEmitter.on(GEOCODE_MULTIPLE, function (_data) {
+        must_index[_data.bandName]--;
+    });
 
-  eventEmitter.on("exit", function () {
-    process.exit(0);
-  });
+    eventEmitter.on("exit", function () {
+        process.exit(0);
+    });
 
-  // Services initialization
-  svcHandler.init(opts);
+    // Services initialization
+    svcHandler.init(opts);
 
-  // Entry Point for indexation
-  eventEmitter.emit("crawlData");
+    // Entry Point for indexation
+    eventEmitter.emit("crawlData");
 
 
-  setInterval(function () {
-    winston.info("[Checking for exit] ...");
-    var remaining = 0;
+    setInterval(function () {
+        winston.info("[Checking for exit] ...");
+        var remaining = 0;
 
-    console.log(must_index);
-    for (var prop in must_index) {
-      remaining = remaining + must_index[prop];
-    }
+        console.log(must_index);
+        for (var prop in must_index) {
+            remaining = remaining + must_index[prop];
+        }
 
-    winston.info("[Checking for exit]: " + remaining);
-    if (remaining === 0)
-      eventEmitter.emit("exit");
-  }, 10000);
+        winston.info("[Checking for exit]: " + remaining);
+        if (remaining === 0)
+            eventEmitter.emit("exit");
+    }, 10000);
 }
 
 if (argv.help) {
-  show_help();
+    show_help();
 }
 else if (argv.show_events) {
-  dump_event_description ();
+    dump_event_description ();
 }
 else if (argv.show_bands) {
-  var crawlerService = require(__base + 'services/crawling/CrawlService.js');
-  crawlerService.fetch_modules();
-  crawlerService.dump_modules_information();
+    var crawlerService = require(__base + 'services/crawling/CrawlService.js');
+    crawlerService.fetch_modules();
+    crawlerService.dump_modules_information();
 }
 else if (argv.index_band) {
-  console.log('will index specific bands');
+    console.log('will index specific bands');
 
-  var bands = argv.index_band.split(",");
-  winston.info("Band: " + bands);
-  start_indexing(
-    {
-      crawl_options: {
-        bands: bands
-      }
+    var bands = argv.index_band.split(",");
+    winston.info("Band: " + bands);
+    start_indexing({
+        crawl_options: {
+            bands: bands
+        }
     });
 }
 else {
-  start_indexing();
+    start_indexing();
 }
 
