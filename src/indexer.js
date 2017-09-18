@@ -15,7 +15,11 @@ var must_index = {};
 
 
 var show_help = function () {
-    console.log ("--- Whatsclose indexer help ---");
+    console.log("Whatsclose indexer help:");
+    console.log(" --help                      Show this message");
+    console.log(" --show_bands                List available crawling modules");
+    console.log(" --index_band band1,band2    Index the specified list of bands. Comma separated");
+
 };
 
 var start_indexing = function(options) {

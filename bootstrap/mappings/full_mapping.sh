@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage() {
-    echo "Fullfill Whatsclose.io initial mapping :"
+    echo "Fullfill Whatsclose.io initial mapping:"
     echo "  full_mapping.sh elastic_search_hostname" 
 }
 
