@@ -11,64 +11,61 @@ var CRAWLING_BAND = 'crawling_band';
 
 /** attributes **/
 function BandIndexer(client) {
-  this.type = 'band';
-  this.es_client = client;
+    this.type = 'band';
+    this.es_client = client;
 }
 
 BandIndexer.prototype = new root_indexer.I();
 
 /** methods **/
 BandIndexer.prototype.init = function () {
-  var self = this;
+    var self = this;
 
-  winston.info('init Band.indexer');
-  eventEmitter.on(CRAWLING_BAND, function(band) {
-    winston.info ('publishing band ' + band.name);
-    self.publish(band);
-  });
-  
+    winston.info('init Band.indexer');
+    eventEmitter.on(CRAWLING_BAND, function(band) {
+        winston.info ('publishing band ' + band.name);
+        self.publish(band);
+    });
 };
 
 BandIndexer.prototype.update = function (es_band, band) {
-  var deferred = Q.defer();
+    var deferred = Q.defer();
 
-  deferred.resolve({
-    id: es_band._id,
-    doc: { last_crawl_date: band.last_crawl_date }
-  });
-  
-  return deferred.promise;
-}
+    deferred.resolve({
+        id: es_band._id,
+        doc: { last_crawl_date: band.last_crawl_date }
+    });
+    return deferred.promise;
+};
 
 BandIndexer.prototype.exists = function (band) {
-  return this.es_client.search ({
-    index: this.index,
-    type: this.type,
-    body: {
-      query: {
-        match: {
-          'name.exact': band.name
+    return this.es_client.search({
+        index: this.index,
+        type: this.type,
+        body: {
+            query: {
+                match: {
+                    'name.exact': band.name
+                }
+            }
         }
-      }
-    }
-  }).then (function(body) {
+    }).then (function(body) {
+        var deferred = Q.defer();
+        var results = body.hits.total;
 
-    var deferred = Q.defer();
-    var results = body.hits.total;
-    
-    winston.log(body);
+        winston.log(body);
 
-    if (results === 0) {
-      deferred.reject (Error (results));
-    }
-    else  {
-      deferred.resolve (body.hits.hits[0]);
-    }
-    
-    return deferred.promise;
-  });
+        if (results === 0) {
+            deferred.reject (Error (results));
+        }
+        else  {
+            deferred.resolve (body.hits.hits[0]);
+        }
+
+        return deferred.promise;
+    });
 };
 
 module.exports = {
-  indexer: BandIndexer
+    indexer: BandIndexer
 };
