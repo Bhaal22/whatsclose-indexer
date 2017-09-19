@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 var env = require('jsdom').env;
 var Q = require('q');
 var winston = require(__base + 'services/CustomWinston');
