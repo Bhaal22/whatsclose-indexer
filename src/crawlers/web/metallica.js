@@ -30,19 +30,21 @@ newCrawlModule.processData = function(window) {
 
     console.log('metallica entries: ', rows.length);
     rows.each (function (index) {
-        var date = $('span.DateDate', this).text();
-        var fullLocation = $('span.DateDetail', this).text();
+            //div class="event-date-month">Oct</div>
+            //<div class="heading heading-m-compact event-date-day">24</div>
+            //<div class="event-date-year">2017</div>
 
-        var details = fullLocation.split('\n');
+        var date_month = $('.event-date > .event-date-month', this).text();
+        var date_day   = $('.event-date > .event-date-day', this).text();
+        var date_year  = $('.event-date > .event-date-year', this).text();
         
-        var location = details[1].trim() + ',' + details[2].trim();
-        var venue = details[3].trim();
-        var dateElements = date.split("/");
+        var location = $(".event-info > h2 > a", this).text();
+        var venue = $("div.event-info-venue", this).text();
 
-        //results.push({date: new Date (dateElements[2], dateElements[1]-1, dateElements[0]).toString('yyyy-MM-dd'),
-        //             location: location,
-        //             venue: venue
-        //});
+        results.push({date: new Date (date_year, Date.getMonthNumberFromName(date_month), date_day).toString('yyyy-MM-dd'),
+                     location: location,
+                     venue: venue
+        });
 
     });
 
