@@ -14,9 +14,12 @@
     "datejs": "^1.0.0-rc3",
     "elasticsearch": "^13.3.1",
     "geocoder": "^0.2.2",
+    "http-proxy-agent": "^2.0.0",
+    "https-proxy-agent": "^2.1.0",
     "jquery": "~3.0.0",
     "jsdom": "~9.3.0 ",
     "lodash": "^4.17.4",
+    "node-geocoder": "^3.21.0",
     "q": "^1.5.0",
     "qs": "^6.5.1",
     "url": "^0.11.0",
@@ -24,8 +27,8 @@
     "yargs": "~4.7.1"
   },
   "devDependencies": {
-    "nock": "0.45.x",
     "expect.js": "0.3.x",
+    "nock": "0.45.x",
     "superagent": "0.18.x"
   }
 }

@@ -3,6 +3,8 @@ var https = require('https');
 var env = require('jsdom').env;
 var Q = require('q');
 var winston = require(__base + 'services/CustomWinston');
+var HttpProxyAgent = require('http-proxy-agent');
+var HttpsProxyAgent = require('https-proxy-agent');
 
 // attributes
 var CrawlerModule = function () {
@@ -40,14 +42,29 @@ CrawlerModule.prototype = {
         var currentModule = this;
 
         // Bind defer on http.get callback function
-        var httpGet = function (opts) {
+        var httpGet = function (url) {
+            var proxy = process.env.http_proxy;
+            var agent;
+            
             var deferred = Q.defer();
 
-            if (opts.startsWith('https')) {
-                https.get(opts, deferred.resolve).on('error', deferred.reject);
+            if (url.startsWith('https')) {
+                agent = new HttpsProxyAgent(proxy);
+                var options = {
+                  agent: agent,
+                  path: url,
+                };
+
+                https.get(options, deferred.resolve).on('error', deferred.reject);
             }
             else {
-                http.get(opts, deferred.resolve).on('error', deferred.reject);
+                agent = new HttpProxyAgent(proxy);
+                var options = {
+                  agent: agent,
+                  path: url,
+                };
+
+                http.get(options, deferred.resolve).on('error', deferred.reject);
             }
 
             return deferred.promise;
@@ -61,6 +78,7 @@ CrawlerModule.prototype = {
                 data += chunk;
             });
             res.on('end', function () {
+                //console.log(data);
                 deferred.resolve(data);
             });
             return deferred.promise;
@@ -69,9 +87,15 @@ CrawlerModule.prototype = {
         // Bind defer on env (DOM extraction library) callback function
         var envPromise = Q.nfbind(env);
 
+        var proxyEnv = function (bodyChunk) {
+            return null;
+        };
+
         // Bind defer on extractData custom function
         var extractData = function (html){
             var deferred = Q.defer();
+            
+
 
             var isPageOK = currentModule.testDataAcess(html);
             if (isPageOK){
@@ -90,7 +114,6 @@ CrawlerModule.prototype = {
         };
 
         // Defered chaining
-
         return httpGet(currentModule.fullUrl).then(function (res){
 
             return loadBody(res);
@@ -128,11 +151,11 @@ CrawlerModule.prototype = {
     },
 
     httpGetError: function(error){
+        //console.log(error);
         winston.error('HTTP GET error while processing the crawl module');
     },
-
     envError: function(error){
-        console.log(error);
+        //console.log(error);
         winston.error('JSDOM ENV error while processing the crawl module');
     }
 }

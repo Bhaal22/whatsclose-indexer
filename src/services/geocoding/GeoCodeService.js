@@ -142,7 +142,6 @@ GeoCoderService.prototype = {
 
     return geocoderPromisify(location).then (function (data) {
       var deferred = Q.defer ();
-
       try {
 	      if (data.status === 'OK') {
           deferred.resolve (data);
@@ -170,6 +169,7 @@ GeoCoderService.prototype = {
 
 
     return self.searchGeometry(concert).fail(function (err) {
+      console.log(err);
       if (retry >= max_retries)
         throw err;
 
